@@ -63,7 +63,8 @@ When you run `ls` from your working directory you should see the following: `GDe
 10. run `./sdl.sh` to configure SDL
 11. run `make -j n`
 13. run `make install`
-14. update the `export LD_LIBRARY_PATH` line in the .bashrc file: `export LD_LIBRARY_PATH=absolute-path-to_Software/sdl/lib:$PATH
+14. update the `export LD_LIBRARY_PATH` line in the .bashrc file: `export LD_LIBRARY_PATH=absolute-path-to_Software/sdl/lib:$PATH`
+15. run `exec bash`
 
 ### Building Boost
 1. download the [Boost 1.56.0 source](http://sourceforge.net/projects/boost/files/boost/1.56.0/)
