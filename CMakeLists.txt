@@ -48,6 +48,13 @@ IF(CMAKE_VERBOSE_CONFIGURE)
   MESSAGE("End of SDL details\n")
 ENDIF()
 
+# Enable BOOST Support
+IF(BOOST_PREFIX)
+  ENABLE_BOOST_SUPPORT(program_options serialization thread timer chrono)
+ELSE()
+  MESSAGE(STATUS "The BOOST_PREFIX has not been set. The system default will be used.")
+ENDIF()
+
 # Set up the project directory hierarchy
 ADD_SUBDIRECTORY(src)
 
