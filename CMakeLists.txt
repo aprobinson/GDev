@@ -21,31 +21,35 @@ ENFORCE_OUT_OF_SOURCE_BUILD()
 # Enable the make test target
 ENABLE_TESTING()
 
-# Find the SDL package
-SET(SDL_INCLUDE_DIRS ${SDL_PREFIX}/include)
-SET(SDL_LIBRARY_DIRS ${SDL_PREFIX}/lib)
+IF(SDL_PREFIX)
+  # Find the SDL package
+  SET(SDL_INCLUDE_DIRS ${SDL_PREFIX}/include)
+  SET(SDL_LIBRARY_DIRS ${SDL_PREFIX}/lib)
 
-# Set the include paths for SDL
-INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIRS})
+  # Set the include paths for SDL
+  INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIRS})
 
-# Set the link paths for SDL
-LINK_DIRECTORIES(${SDL_LIBRARY_DIRS})
+  # Set the link paths for SDL
+  LINK_DIRECTORIES(${SDL_LIBRARY_DIRS})
+  
+  # Find the SDL library
+  FIND_LIBRARY(SDL libSDL2.so ${SDL_LIBRARY_DIRS} NO_CMAKE_SYSTEM_PATH)
+  
+  IF(${SDL} MATCHES NOTFOUND)
+    MESSAGE(FATAL_ERROR "The SDL2 library could not be found!")
+  ENDIF()
 
-# Find the SDL library
-FIND_LIBRARY(SDL libSDL2.so ${SDL_LIBRARY_DIRS} NO_CMAKE_SYSTEM_PATH)
-
-IF(${SDL} MATCHES NOTFOUND)
-  MESSAGE(FATAL_ERROR "The SDL2 library could not be found!")
-ENDIF()
-
-# Echo the SDL details if a verbose configure was requested
-IF(CMAKE_VERBOSE_CONFIGURE)
-  MESSAGE("Found SDL! Here are the details: ")
-  MESSAGE(" SDL_PREFIX = ${SDL_PREFIX}")
-  MESSAGE(" SDL_INCLUDE_DIRS = ${SDL_INCLUDE_DIRS}")
-  MESSAGE(" SDL_LIBRARY_DIRS = ${SDL_LIBRARY_DIRS}")
-  MESSAGE(" SDL_LIBRARY = ${SDL}")
-  MESSAGE("End of SDL details\n")
+  # Echo the SDL details if a verbose configure was requested
+  IF(CMAKE_VERBOSE_CONFIGURE)
+    MESSAGE("Found SDL! Here are the details: ")
+    MESSAGE(" SDL_PREFIX = ${SDL_PREFIX}")
+    MESSAGE(" SDL_INCLUDE_DIRS = ${SDL_INCLUDE_DIRS}")
+    MESSAGE(" SDL_LIBRARY_DIRS = ${SDL_LIBRARY_DIRS}")
+    MESSAGE(" SDL_LIBRARY = ${SDL}")
+    MESSAGE("End of SDL details\n")
+  ENDIF()
+ELSE()
+  MESSAGE(ERROR "The SDL_PREFIX must me set.")
 ENDIF()
 
 # Enable BOOST Support
