@@ -52,6 +52,38 @@ ELSE()
   MESSAGE(ERROR "The SDL_PREFIX must me set.")
 ENDIF()
 
+# Enable SDL_IMG
+IF(SDL_IMG_PREFIX)
+  # Find the SDL-IMAGE package
+  SET(SDL_IMG_INCLUDE_DIRS ${SDL_IMG_PREFIX}/include)
+  SET(SDL_IMG_LIBRARY_DIRS ${SDL_IMG_PREFIX}/lib)
+
+  # Set the include paths for SDL_IMG
+  INCLUDE_DIRECTORIES(${SDL_IMG_INCLUDE_DIRS})
+
+  # Set the link paths for SDL
+  LINK_DIRECTORIES(${SDL_IMG_LIBRARY_DIRS})
+  
+  # Find the SDL library
+  FIND_LIBRARY(SDL libSDL2.so ${SDL_IMG_LIBRARY_DIRS} NO_CMAKE_SYSTEM_PATH)
+  
+  IF(${SDL} MATCHES NOTFOUND)
+    MESSAGE(FATAL_ERROR "The SDL_IMG library could not be found!")
+  ENDIF()
+
+  # Echo the SDL details if a verbose configure was requested
+  IF(CMAKE_VERBOSE_CONFIGURE)
+    MESSAGE("Found SDL! Here are the details: ")
+    MESSAGE(" SDL_IMG_PREFIX = ${SDL_IMG_PREFIX}")
+    MESSAGE(" SDL_IMG_INCLUDE_DIRS = ${SDL_IMG_INCLUDE_DIRS}")
+    MESSAGE(" SDL_LIBRARY_DIRS = ${SDL_IMG_LIBRARY_DIRS}")
+    MESSAGE(" SDL_IMG_LIBRARY = ${SDL_IMG}")
+    MESSAGE("End of SDL details\n")
+  ENDIF()
+ELSE()
+  MESSAGE(ERROR "The SDL_IMG_PREFIX must me set.")
+ENDIF()
+
 # Enable BOOST Support
 IF(BOOST_PREFIX)
   ENABLE_BOOST_SUPPORT(program_options serialization thread timer chrono)
