@@ -13,8 +13,12 @@ INSTALL(TARGETS sdl_test_2
 ##---------------------------------------------------------------------------##
 ## Sean's tutorial execs
 ##---------------------------------------------------------------------------##
-
-
+# Create the sdl_test_6_sean exec
+ADD_EXECUTABLE(sdl_test_6_sean sdl_test_6_sean.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_6_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_6_sean
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+  
 ##---------------------------------------------------------------------------##
 ## Alex's tutorial execs
 ##---------------------------------------------------------------------------##
@@ -35,3 +39,5 @@ ADD_EXECUTABLE(sdl_test_5_alex sdl_test_5_alex.cpp)
 TARGET_LINK_LIBRARIES(sdl_test_5_alex ${SDL} ${Boost_PROGRAM_OPTIONS_LIBRARY})
 INSTALL(TARGETS sdl_test_5_alex
   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+
