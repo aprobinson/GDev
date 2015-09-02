@@ -23,7 +23,7 @@ ENABLE_TESTING()
 
 IF(SDL_PREFIX)
   # Find the SDL package
-  SET(SDL_INCLUDE_DIRS ${SDL_PREFIX}/include)
+  SET(SDL_INCLUDE_DIRS ${SDL_PREFIX}/include ${SDL_PREFIX}/include/SDL2)
   SET(SDL_LIBRARY_DIRS ${SDL_PREFIX}/lib)
 
   # Set the include paths for SDL
