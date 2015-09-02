@@ -11,7 +11,7 @@ Installation {#installation}
 ## Building Dependent Software Libraries
 When building software libraries and executables the following directory structure should be adopted: software/package/package.xx.xx.xx, software/package/build, software/package/src. "package" will be the name of the particular software package of interest (see dependencies). "package.xx.xx.xx" comes from unpacking the compressed source files (e.g. package.tar.gz). The src directory is created by making a softlink to the package.xx.xx.xx directory. This is done to make the build a bit easier/faster.
 
-Not that currently, depencies 1 and 2 should be build first.
+Note that currently, depencies 1 and 2 should be built first.
 
 ### Checking out GDev
 1. create a working directory where GDev will be built (e.g. software/gdev)
@@ -60,8 +60,9 @@ When you run `ls` from your working directory you should see the following: `GDe
 7. move to the build directory (e.g. software/sdl/build)
 8. copy `GDev/scripts/sdl.sh` into the build directory
 9. change the variables in the script to reflect the desired system paths
-10. run `./sdl.sh` to configure SDL
-11. run `make -j n`
+10. run `sudo apt-get build-dep libsdl2`
+11. run `./sdl.sh` to configure SDL
+12. run `make -j n`
 13. run `make install`
 14. update the `export LD_LIBRARY_PATH` line in the .bashrc file: `export LD_LIBRARY_PATH=absolute-path-to_Software/sdl/lib:$PATH`
 15. run `exec bash`
