@@ -46,4 +46,9 @@ TARGET_LINK_LIBRARIES(sdl_test_7_alex ${SDL} ${SDL_IMG} ${Boost_PROGRAM_OPTIONS_
 INSTALL(TARGETS sdl_test_7_alex
   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
+# Create the sdl_test_8_alex exec
+ADD_EXECUTABLE(sdl_test_8_alex sdl_test_8_alex.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_8_alex ${SDL} ${SDL_IMG} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_8_alex
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
