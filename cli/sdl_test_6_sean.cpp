@@ -72,6 +72,14 @@ bool initialize()
     {
       // Start loading PNG
       int image_flags = IMG_INIT_PNG;
+      // load support for the JPG and PNG image formats
+      int flags=IMG_INIT_JPG|IMG_INIT_PNG;
+      int initted=IMG_Init(flags);
+      if((initted&flags) != flags) {
+	printf("IMG_Init: Failed to init required jpg and png support!\n");
+	printf("IMG_Init: %s\n", IMG_GetError());
+	// handle error
+      }
       if( !( IMG_Init( image_flags ) & image_flags ) )
       {
 	std::cerr << "SDL image could not initialize: "
@@ -136,7 +144,7 @@ bool loadMedia( const std::string& filename )
   {
     std::cerr << "Can't load image "
 	      << filename
-	      << " SDL_Error: "
+	      << " SDL_IMG_Error: "
 	      << IMG_GetError()
 	      << std::endl;
     success = false;
@@ -155,7 +163,7 @@ void close()
   SDL_DestroyWindow( g_window );
   g_window = NULL;
 
-  //IMG_QUIT();
+  IMG_Quit();
   SDL_Quit();
 }
 
@@ -214,7 +222,7 @@ int main( int argc, char** argv )
   }
   else
   {
-    // Load the bitmap
+    // Load the png
     if( !loadMedia( image_name ))
     {
       return 1;
@@ -235,7 +243,7 @@ int main( int argc, char** argv )
 	    quit = true;
 	}
 
-	// Apply the image stretch
+	// Apply the png image
 	SDL_BlitSurface( g_png_surface, NULL, g_screen_surface, NULL );
 
 	//Update surface

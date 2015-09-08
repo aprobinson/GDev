@@ -61,10 +61,10 @@ IF(SDL_IMG_PREFIX)
   # Set the include paths for SDL_IMG
   INCLUDE_DIRECTORIES(${SDL_IMG_INCLUDE_DIRS})
 
-  # Set the link paths for SDL
+  # Set the link paths for SDL_IMG
   LINK_DIRECTORIES(${SDL_IMG_LIBRARY_DIRS})
   
-  # Find the SDL library
+  # Find the SDL_IMG library
   FIND_LIBRARY(SDL_IMG libSDL2_image.so ${SDL_IMG_LIBRARY_DIRS} NO_CMAKE_SYSTEM_PATH NO_DEFAULT_PATH)
   
   IF(${SDL_IMG} MATCHES NOTFOUND)
@@ -73,10 +73,10 @@ IF(SDL_IMG_PREFIX)
 
   # Echo the SDL details if a verbose configure was requested
   IF(CMAKE_VERBOSE_CONFIGURE)
-    MESSAGE("Found SDL! Here are the details: ")
+    MESSAGE("Found SDL_IMG! Here are the details: ")
     MESSAGE(" SDL_IMG_PREFIX = ${SDL_IMG_PREFIX}")
     MESSAGE(" SDL_IMG_INCLUDE_DIRS = ${SDL_IMG_INCLUDE_DIRS}")
-    MESSAGE(" SDL_LIBRARY_DIRS = ${SDL_IMG_LIBRARY_DIRS}")
+    MESSAGE(" SDL_IMG_LIBRARY_DIRS = ${SDL_IMG_LIBRARY_DIRS}")
     MESSAGE(" SDL_IMG_LIBRARY = ${SDL_IMG}")
     MESSAGE("End of SDL details\n")
   ENDIF()
