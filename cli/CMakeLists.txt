@@ -25,7 +25,7 @@ TARGET_LINK_LIBRARIES(sdl_test_7_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS_
 INSTALL(TARGETS sdl_test_7_sean
   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
-# Create the sdl_test_6_sean exec
+# Create the sdl_test_8_sean exec
 ADD_EXECUTABLE(sdl_test_8_sean sdl_test_8_sean.cpp)
 TARGET_LINK_LIBRARIES(sdl_test_8_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS_LIBRARY})
 INSTALL(TARGETS sdl_test_8_sean
@@ -64,3 +64,14 @@ TARGET_LINK_LIBRARIES(sdl_test_8_alex ${SDL} ${SDL_IMG} ${Boost_PROGRAM_OPTIONS_
 INSTALL(TARGETS sdl_test_8_alex
   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
+# Create the sdl_test_9_alex exec
+ADD_EXECUTABLE(sdl_test_9_alex sdl_test_9_alex.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_9_alex ${SDL} ${SDL_IMG} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_9_alex
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+# Create the sdl_test_10_alex exec
+ADD_EXECUTABLE(sdl_test_10_alex sdl_test_10_alex.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_10_alex ${SDL} ${SDL_IMG} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_10_alex
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
