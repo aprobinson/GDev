@@ -38,6 +38,12 @@ TARGET_LINK_LIBRARIES(sdl_test_9_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS_
 INSTALL(TARGETS sdl_test_9_sean
   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
+# Create the sdl_test_10_sean exec
+ADD_EXECUTABLE(sdl_test_10_sean sdl_test_10_sean.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_10_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_10_sean
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
 
   
 ##---------------------------------------------------------------------------##
