@@ -44,6 +44,36 @@ TARGET_LINK_LIBRARIES(sdl_test_10_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS
 INSTALL(TARGETS sdl_test_10_sean
   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
+# Create the sdl_test_11_sean exec
+ADD_EXECUTABLE(sdl_test_11_sean sdl_test_11_sean.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_11_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_11_sean
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+# Create the sdl_test_12_sean exec
+ADD_EXECUTABLE(sdl_test_12_sean sdl_test_12_sean.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_12_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_12_sean
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+# Create the sdl_test_13_sean exec
+ADD_EXECUTABLE(sdl_test_13_sean sdl_test_13_sean.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_13_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_13_sean
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+# Create the sdl_test_14_sean exec
+ADD_EXECUTABLE(sdl_test_14_sean sdl_test_14_sean.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_14_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_14_sean
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+# Create the sdl_test_15_sean exec
+ADD_EXECUTABLE(sdl_test_15_sean sdl_test_15_sean.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_15_sean ${SDL_IMG} ${SDL} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_15_sean
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
 
   
 ##---------------------------------------------------------------------------##
