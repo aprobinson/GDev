@@ -84,6 +84,38 @@ ELSE()
   MESSAGE(ERROR "The SDL_IMG_PREFIX must me set.")
 ENDIF()
 
+# Enable SDL_FONT
+IF(SDL_FONT_PREFIX)
+  # Find the SDL-FONT package
+  SET(SDL_FONT_INCLUDE_DIRS ${SDL_FONT_PREFIX}/include)
+  SET(SDL_FONT_LIBRARY_DIRS ${SDL_FONT_PREFIX}/lib)
+
+  # Set the include paths for SDL_FONT
+  INCLUDE_DIRECTORIES(${SDL_FONT_INCLUDE_DIRS})
+
+  # Set the link paths for SDL_FONT
+  LINK_DIRECTORIES(${SDL_FONT_LIBRARY_DIRS})
+  
+  # Find the SDL_FONT library
+  FIND_LIBRARY(SDL_FONT libSDL2_ttf.so ${SDL_FONT_LIBRARY_DIRS} NO_CMAKE_SYSTEM_PATH NO_DEFAULT_PATH)
+  
+  IF(${SDL_FONT} MATCHES NOTFOUND)
+    MESSAGE(FATAL_ERROR "The SDL_FONT library could not be found!")
+  ENDIF()
+
+  # Echo the SDL details if a verbose configure was requested
+  IF(CMAKE_VERBOSE_CONFIGURE)
+    MESSAGE("Found SDL_FONT! Here are the details: ")
+    MESSAGE(" SDL_FONT_PREFIX = ${SDL_FONT_PREFIX}")
+    MESSAGE(" SDL_FONT_INCLUDE_DIRS = ${SDL_FONT_INCLUDE_DIRS}")
+    MESSAGE(" SDL_FONT_LIBRARY_DIRS = ${SDL_FONT_LIBRARY_DIRS}")
+    MESSAGE(" SDL_FONT_LIBRARY = ${SDL_FONT}")
+    MESSAGE("End of SDL details\n")
+  ENDIF()
+ELSE()
+  MESSAGE(ERROR "The SDL_FONT_PREFIX must me set.")
+ENDIF()
+
 # Enable BOOST Support
 IF(BOOST_PREFIX)
   ENABLE_BOOST_SUPPORT(program_options serialization thread timer chrono)
