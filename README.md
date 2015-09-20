@@ -7,6 +7,8 @@ Installation {#installation}
 3. [Doxygen 1.8.8](http://www.stack.nl/~dimitri/doxygen/index.html)
 3. [Boost 1.56.0+](http://www.boost.org/)
 4. [SDL 2.0.3+](https://www.libsdl.org/download-2.0.php)
+5. [SDL_image 2.0.0+](https://www.libsdl.org/projects/SDL_image/)
+6. [SDL_ttf 2.0.12+](https://www.libsdl.org/projects/SDL_ttf/)
 
 ## Building Dependent Software Libraries
 When building software libraries and executables the following directory structure should be adopted: software/package/package.xx.xx.xx, software/package/build, software/package/src. "package" will be the name of the particular software package of interest (see dependencies). "package.xx.xx.xx" comes from unpacking the compressed source files (e.g. package.tar.gz). The src directory is created by making a softlink to the package.xx.xx.xx directory. This is done to make the build a bit easier/faster.
@@ -66,6 +68,34 @@ When you run `ls` from your working directory you should see the following: `GDe
 13. run `make install`
 14. update the `export LD_LIBRARY_PATH` line in the .bashrc file: `export LD_LIBRARY_PATH=absolute-path-to_Software/sdl/lib:$PATH`
 15. run `exec bash`
+
+### Building SDL image
+1. download the [SDL_image 2.0.0](https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.0.tar.gz)
+2. move the SDL2_image-2.0.0.tar.gz file to the sdl working directory (e.g. software/sdl-image)
+3. move to the sdl-image directory
+4. run `tar -xvf SDL2_image-2.0.0.tar.gz`
+5. run `ln -s SDL2_image-2.0.0 src`
+6. move to the build directory (e.g. software/sdl-image/build)
+7. run `sudo apt-get build-dep libSDL2-image`
+8. run `../src/configure --prefix=../.`
+9. run `make -j n`
+10. run `make install`
+11. update the `export LD_LIBRARY_PATH` line in the .bashrc file: `export LD_LIBRARY_PATH=absolute-path-to_Software/sdl-image/lib:$PATH`
+12. run `exec bash`
+
+### Build SDL text
+1. download the [SDL_ttf 2.0.12](https://www.libsdl.org/projects/SDL_ttf/)
+2. move the SDL2_ttf-2.0.12.tar.gz file to the sdl working directory (e.g. software/sdl-text)
+3. move to the sdl-text directory
+4. run `tar -xvf SDL2_tff-2.0.12.tar.gz`
+5. run `ln -s SDL2_tff-2.0.12 src`
+6. move to the build directory (e.g. software/sdl-text/build)
+7. run `sudo apt-get build-dep libsdl2-ttf-dev`
+8. run `../src/configure --prefix=../.`
+9. run `make -j n`
+10. run `make install`
+11. update the `export LD_LIBRARY_PATH` line in the .bashrc file: `export LD_LIBRARY_PATH=absolute-path-to_Software/sdl-text/lib:$PATH`
+12. run `exec bash`
 
 ### Building Boost
 1. download the [Boost 1.56.0 source](http://sourceforge.net/projects/boost/files/boost/1.56.0/)
