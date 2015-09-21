@@ -150,3 +150,9 @@ ADD_EXECUTABLE(sdl_test_15_alex sdl_test_15_alex.cpp)
 TARGET_LINK_LIBRARIES(sdl_test_15_alex ${SDL} ${SDL_IMG} ${Boost_PROGRAM_OPTIONS_LIBRARY})
 INSTALL(TARGETS sdl_test_15_alex
   RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+# Create the sdl_test_16_alex exec 
+ADD_EXECUTABLE(sdl_test_16_alex sdl_test_16_alex.cpp)
+TARGET_LINK_LIBRARIES(sdl_test_16_alex ${SDL} ${SDL_IMG} ${SDL_FONT} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+INSTALL(TARGETS sdl_test_16_alex
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
