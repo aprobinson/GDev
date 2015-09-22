@@ -13,13 +13,7 @@
 Texture::Texture()
   : d_texture( NULL ),
     d_width(),
-    d_height(),
-    d_x_position(),
-    d_y_position(),
-    d_clip(),
-    d_rotation_angle( 0.0 ),
-    d_center(),
-    d_flip( SDL_FLIP_NONE )
+    d_height()
 { /* ... */ }
 
 // Load the image
@@ -56,65 +50,23 @@ void Texture::setAlpha( const unsigned char alpha )
 
 }
 
-// Set the position to render the texture at
-void Texture::setPosition( const int x_position, const int y_position )
-{
-
-}
-
-// Set the clip rectangle
-void Texture::setClipRectangle( const SDL_Rect& clip )
-{
-
-}
-
-// Reset the clip rectangle
-void Texture::resetClipRectangle()
-{
-
-}
-
-// Set the rotation angle (degrees)
-void Texture::setRotationAngle( const double angle )
-{
-
-}
-  
-// Reset the rotation angle and rotation point
-void Texture::resetRotationAngle()
-{
-
-}
-
-// Set the rotation center
-void Texture::setRotationCenter( const SDL_Point& center )
-{
-
-}
-
-// Reset the rotation center
-void Texture::resetRotationCenter()
-{
-
-}
-
-// Set the flip state
-void Texture::setRendererFlip( const SDL_RendererFlip flip )
-{
-
-}
-
-// Reset the renderer flip state
-void Texture::resetRendererFlip()
-{
-
-}
-
-// Render the texture
+// Render the texture with default parameters
 void Texture::render() const
 {
+  this->render( 0, 0 );
+}
+
+// Render the texture will user parameters
+void render( const int x_position,
+	     const int y_position,
+	     const SDL_Rect* clip,
+	     const double angle,
+	     const SDL_Point* center,
+	     const SDL_RendererFlip flip ) const
+{
 
 }
+
 
 // Get the image width
 unsigned Texture::getWidth() const
