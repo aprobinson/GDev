@@ -28,7 +28,9 @@ public:
   StartButton( const Shape& button_shape,
 	       const TTF_Font& font,
 	       const SDL_Color& text_color,
-	       const SDL_Color& background_color );
+	       const SDL_Color& background_color,
+	       const SDL_Color* scroll_over_backround_color = NULL,
+	       const SDL_Color* press_background_color = NULL );
 
   //! Destructor
   ~StartButton()
@@ -36,6 +38,9 @@ public:
 
   //! Render the start button
   void render() const;
+
+  //! Check if the game has started
+  bool hasGameStarted() const;
 
 protected:
 
@@ -53,7 +58,20 @@ protected:
 
 private:
 
-  Texture d_texture;
+  // The default texture
+  Texture d_default_texture;
+
+  // The button scroll over texture
+  Texture d_button_scroll_over_texture;
+
+  // The button press texture
+  Texture d_button_press_texture;
+
+  // The current texture
+  Texture* d_current_texture;
+
+  // The bool that stores whether the game has started
+  bool d_game_started;
 };
 
 //---------------------------------------------------------------------------//

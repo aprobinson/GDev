@@ -14,6 +14,7 @@
 
 // SDL Includes
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 // GDev Includes
 #include "RenderableObject.hpp"
@@ -36,7 +37,9 @@ public:
 
   //! Load the text
   void loadFromText( const std::string& message,
-		     const SDL_Color& text_color );
+		     const TTF_Font& font,
+		     const SDL_Color& text_color,
+		     const SDL_Color* background_color = NULL );
 
   //! Set the color modulation
   void setColorModulation( const SDL_Color& color_modulation );

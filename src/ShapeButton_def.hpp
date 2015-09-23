@@ -30,6 +30,20 @@ bool ShapeButton<Shape>::isMouseInButton() const
   return d_shape.isPointInShape( mouse_x_pos, mouse_y_pos );
 }
 
+// Get the upper left (start) x position
+template<typename Shape>
+unsigned ShapeButton<Shape>::getUpperLeftXPos()
+{
+  return d_shape.getBoundingBox().x;
+}
+
+// Get the upper left (start) y position
+template<typename Shape>
+unsigned ShapeButton<Shape>::getUpperRightXPos()
+{
+  return d_shape.getBoundingBox().y;
+}
+
 #endif // end SHAPE_BUTTON_DEF_HPP
 
 //---------------------------------------------------------------------------//

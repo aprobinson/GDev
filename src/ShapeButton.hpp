@@ -28,8 +28,14 @@ public:
 
 protected:
 
-  // Test if the mouse position is inside of the button
+  //! Test if the mouse position is inside of the button
   bool isMouseInButton() const;
+
+  //! Get the upper left (start) x position
+  unsigned getUpperLeftXPos();
+
+  //! Get the upper left (start) y position
+  unsigned getUpperRightXPos();
 
 private:
 

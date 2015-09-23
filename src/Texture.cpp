@@ -27,9 +27,11 @@ void Texture::loadFromFile( const std::string& filename,
 
 // Load the text
 void Texture::loadFromText( const std::string& message,
-			    const SDL_Color& text_color )
+			    const TTF_Font& font,
+			    const SDL_Color& text_color,
+			    const SDL_Color* background_color )
 {
-
+  
 }
 
 // Set the color modulation
