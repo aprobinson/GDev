@@ -89,6 +89,9 @@ private:
 
   // The image height
   unsigned d_height;
+
+  // The window renderer
+  SDL_Renderer* g_renderer;
 };
 
 // end TEXTURE_HPP
