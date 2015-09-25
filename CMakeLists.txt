@@ -123,6 +123,19 @@ ELSE()
   MESSAGE(STATUS "The BOOST_PREFIX has not been set. The system default will be used.")
 ENDIF()
 
+# Add Design-by-Contract support if requested
+IF(${PROJECT_NAME}_ENABLE_DBC)
+  IF(${${PROJECT_NAME}_ENABLE_DBC})
+    SET(HAVE_${PROJECT_NAME}_DBC "1")
+  ELSE()
+    SET(HAVE_${PROJECT_NAME}_DBC "0")
+ELSE()
+  SET(HAVE_${PROJECT_NAME}_DBC "0")
+ENDIF()
+
+# Parse the DBC configure file so it can be used in source files
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/dbc_config.hpp.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_dbc_config.hpp)
+
 # Set up the project directory hierarchy
 ADD_SUBDIRECTORY(src)
 
