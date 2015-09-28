@@ -8,182 +8,270 @@
 
 // GDev Includes
 #include "Texture.hpp"
+#include "ExceptionTestMacros.hpp"
+#include "DBCMacros.hpp"
 
-// Default constructor
-Texture::Texture()
+// Renderer constructor
+Texture::Texture( const std::shared_ptr<Renderer>& renderer,
+	 const Uint32 pixel_format,
+	 const int texture_access,
+	 const unsigned width,
+	 const unsigned height )
+  : d_texture( SDL_CreateTexture( renderer->getRawRendererPtr(),
+				  pixel_format,
+				  texture_access,
+				  width,
+				  height ) ),
+    d_renderer( renderer )	       
+{
+  // Make sure the renderer is valid
+  testPrecondition( d_renderer );
+
+  // Make sure the texture was created successfully
+  TEST_FOR_EXCEPTION( d_texture == NULL,
+		      ExceptionType,
+		      "Error: The texture could not be created! "
+		      "SDL_Error: " << SDL_GetError() );
+}
+
+// Surface constructor
+Texture::Texture( const std::shared_ptr<Renderer>& renderer,
+		  const Surface& surface )
+  : d_texture( SDL_CreateTextureFromSurface( renderer->getRawRendererPtr(),
+					     &surface ) ),
+    d_renderer( renderer )
+{
+  // Make sure the renderer is valid
+  testPrecondition( d_renderer );
+
+  // Make sure the texture was created successfully
+  TEST_FOR_EXCEPTION( d_texture == NULL,
+		      ExceptionType,
+		      "Error: The texture could not be created! "
+		      "SDL_Error: " << SDL_GetError() );
+}
+
+// Image constructor
+Texture::Texture( const std::shared_prt<Renderer>& renderer,
+		  const std::string& image_name )
   : d_texture( NULL ),
-    g_renderer( NULL),
-    d_width(),
-    d_height()
-{ /* ... */ }
-
-// Load the image
-void Texture::loadFromFile( const std::string& filename,
-			    const unsigned char color_key_red = 0xFF,
-			    const unsigned char color_key_green = 0xFF,
-			    const unsigned char color_key_blue = 0xFF )
+    d_renderer( renderer )
 {
-  // Deallocate preexisting texture
-  this->freeTexture();
+  // Make sure the renderer is valid
+  testPrecondition( d_renderer );
+  
+  // Create a surface for the image
+  Surface tmp_surface( image_name );
 
-  // Load the image
-  SDL_Surface* loaded_surface = IMG_LOAD( filename.c_str() );
+  // Create the texture from the surface
+  d_texture = SDL_CreateTextureFromSurface( renderer->getRawRendererPtr(),
+					    &tmp_surface );
 
-  if( loaded_surface == NULL )
-  {
-    std::cerr << "Unable to load image "
-	      << filename
-	      << "! SDL_image Error: "
-	      << IMG_GetError()
-	      << std::endl;
-  }
-  else
-  {
-    // Color key image
-    SDL_SetColorKey( loaded_surface,
-		     SDL_TRUE,
-		     SDL_MapRGB( loaded_surface->format,
-				 color_key_red,
-				 color_key_green,
-				 color_key_blue ));
-    // Create texture from surface pixels
-    d_texture = SDL_CreateTextureFromSurface( g_renderer, loaded_surface );
-
-    if( new_texture == NULL )
-    {
-      std::cerr << "Unable to create texture from "
-		<< filename
-		<< "! SDL Error: "
-		<< SDL_GetError()
-		<< std::endl;
-    }
-    else
-    {
-      d_width = loaded_surface->w;
-      d_height = loaded_surface->h;
-    }
-
-    // Free the old loaded surface
-    SDL_FreeSurface( loaded_surface );
-  }
-
-  return d_texture != NULL;
+  // Make sure the texture was created successfully
+  TEST_FOR_EXCEPTION( d_texture == NULL,
+		      ExceptionType,
+		      "Error: The texture could not be created! "
+		      "SDL_Error: " << SDL_GetError() );
 }
 
-// Load the text
-void Texture::loadFromText( const std::string& message,
-			    const TTF_Font& font,
-			    const SDL_Color& text_color,
-			    const SDL_Color* background_color )
+// Text constructor
+Texture::Texture( const std::shared_ptr<Renderer>& renderer,
+		  const std::string& message,
+		  const TTF_Font& font,
+		  const SDL_Color& text_color,
+		  const SDL_Color* background_color )
+  : d_texture( NULL ),
+    d_renderer( renderer )
 {
-  // Free preexsting structure
-  this->freeTexture();
+  // Make sure the renderer is valid
+  testPrecondition( d_renderer );
 
-  // Render text surface
-  SDL_Surface* text_surface = TTF_RenderText_Shaded( font,
-						     message,
-						     text_color,
-						     background_color ); 
-  if ( text_surface = NULL )
-  {
-    std::cerr << "Unable to render text surface! SDL_ttf Error: "
-	      << TTF_GetError()
-	      << std::endl;
-  }
-  else
-  {
-    // Create texture from surface pixels
-    d_texture = SDL_CreateTextureFromSurface( g_renderer, text_surface );
+  // Create a surface for the image
+  Surface tmp_surface( message, font, text_color, background_color );
 
-    if( d_texture == NULL )
-    {
-      std::cerr << "Unable to create texture from rendered text! SDL Error: "
-		<< SDL_GetError()
-		<< std:endl;
-    }
-    else
-    {
-      // Get image dimensions
-      d_width = text_surface->w;
-      d_height = text_surface->h;
-    }
-  }
-    return d_texture != NULL;
+  // Create the texture from the surface
+  d_texture = SDL_CreateTextureFromSurface( renderer->getRawRendererPtr(),
+					    &tmp_surface );
+
+  // Make sure the texture was created successfully
+  TEST_FOR_EXCEPTION( d_texture == NULL,
+		      ExceptionType,
+		      "Error: The texture could not be created! "
+		      "SDL_Error: " << SDL_GetError() );
 }
 
-// Set the color modulation
-void Texture::setColorModulation( const SDL_Color& color_modulation )
+// Destructor
+Texture::~Texture()
 {
-  SDL_SetTextureColorMod( d_texture, color_modulation );
+  this->free();
 }
 
-// Set the blending
-void Texture::setBlendMode( const SDL_BlendMode blending )
+// Get the width of the texture
+unsigned Texture::getWidth() const
 {
-  SDL_SetTextureBlendMode( d_texture, blending );
+  return d_texture->w;
+}
+
+// Get the height of the texture
+unsigned Texture::getHeight() const
+{
+  return d_texture->h;
+}
+
+// Get the alpha modulation
+Unit8 Texture::getAlphaMod() const
+{
+  Unit8 alpha;
+  
+  int return_value = 
+    SDL_GetTextureAlphaMod( const_cast<SDL_Texture*>( d_texture ), &alpha );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The alpha modulation could not be retrieved "
+		      "from the texture! SDL_Error: " << SDL_GetError() );
+
+  return alpha;
 }
 
 // Set the alpha modulation
-void Texture::setAlpha( const unsigned char alpha )
+void Texture::setAlphaMod( const Uint8 alpha )
 {
-  SDL_SetTextureAlpha( d_structure, alpha);
+  int return_value = SDL_SetTextureAlphaMod( d_texture, alpha );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The alpha modulation could not be set for the "
+		      "texture! SDL_Error: " << SDL_GetError() );
+}
+
+// Get the color modulation
+void Texture::getColorMod( Uint8& red, Uint8& green, Uint8& blue ) const
+{
+  int return_value = 
+    SDL_GetTextureColorMod( const_cast<SDL_Texture*>( d_texture ),
+			    &red,
+			    &green,
+			    &blue );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The color modulation could not be retrieved "
+		      "from the texture! SDL_Error: " << SDL_GetError() );
+}
+
+// Set the color modulation
+void Texture::setColorModulation( const Uint8 red, 
+				  const Uint8 green,
+				  const Uint8 blue )
+{
+  int return_value = SDL_SetTextureColorMod( d_texture, 
+					     red,
+					     green,
+					     blue );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The color modulation could not be set for the "
+		      "texture! SDL_Error: " << SDL_GetError() );
+}
+
+// Get the blend mode
+SDL_BlendMode Texture::getBlendMode() const
+{
+  SDL_BlendMode mode;
+
+  int return_value = 
+    SDL_GetTextureBlendMode( const_cast<SDL_Texture*>( d_texture ), &mode );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The blend mode could not be retrieved from the "
+		      "texture! SDL_Error: " << SDL_GetError() );
+
+  return mode;
+}
+
+// Set the blending
+void Texture::setBlendMode( const SDL_BlendMode mode )
+{
+  int return_value = SDL_SetTextureBlendMode( d_texture, mode );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The blend mode could not be set for the "
+		      "texture! SDL_Error: " << SDL_GetError() );
 }
 
 // Render the texture with default parameters
-void Texture::render() const
+void Texture::render()
 {
-  this->render( 0, 0 );
+  int return_value = SDL_RenderCopy( d_renderer->getRawRendererPtr(),
+				     d_texture,
+				     NULL,
+				     NULL );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The texture could not be rendered! "
+		      "SDL_Error: " << SDL_GetError() );
 }
 
 // Render the texture will user parameters
 void render( const int x_position,
 	     const int y_position,
-	     const SDL_Rect* clip,
-	     const double angle,
-	     const SDL_Point* center,
-	     const SDL_RendererFlip flip ) const
+	     const SDL_Rect* texture_clip,
+	     const double rotation_angle,
+	     const SDL_Point* rotation_center,
+	     const SDL_RendererFlip flip )
 {
-  // Set the rendering space and render to screen
-  SDL_Rect render_quad = { x_position, y_position, d_width, d_height };
+  // Set the target rectangle where the texture clip will be rendered
+  SDL_Rect target_rect = { x_position, 
+			   y_position, 
+			   this->getWidth(),
+			   this->getHeight() };
 
   // Set the clip rendering dimensions
-  if( clip != NULL )
+  if( texture_clip != NULL )
   {
-    render_quad.w = clip->w;
-    render_quad.h = clip->h;
+    target_rect.w = texture_clip->w;
+    target_rect.h = texture_clip->h;
   }
 
-  SDL_RenderCopyEx( g_renderer,
-		    d_texture,
-		    clip,
-		    &render_quad,
-		    angle,
-		    center,
-		    flip );
+  this->render( texture_clip, 
+		target_rect, 
+		rotation_angle, 
+		rotation_center, 
+		flip );
 }
 
-// Get the image width
-unsigned Texture::getWidth() const
+// Render the texture
+void Texture::render( const SDL_Rect* texture_rect,
+		      const SDL_Rect* target_rect,
+		      const double rotation_angle,
+		      const SDL_Point* rotation_center,
+		      const SDL_RendererFlip flip )
 {
-  return d_width;
-}
+  int return_value = SDL_RenderCopyEx( d_renderer->getRawRendererPtr(),
+				       d_texture,
+				       texture_rect,
+				       target_rect,
+				       rotation_angle,
+				       rotation_center,
+				       flip );
 
-// Get the image height
-unsigned Texture::getHeight() const
-{
-  return d_height;
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The texture could not be rendered! "
+		      "SDL_Error: " << SDL_GetError() );
 }
-
+  
 // Free texture
-void Texture::freeTexture()
+void Texture::free()
 {
-  if( d_texture != NULL )
-  {
-    SDL_DestroyTexture( d_texture );
-    d_texture = NULL;
-    d_width = 0;
-    d_height = 0;
-  }
+  SDL_DestroyTexture( d_texture );
+  
+  d_texture = NULL;
 }
 
 //---------------------------------------------------------------------------//

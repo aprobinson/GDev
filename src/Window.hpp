@@ -15,6 +15,9 @@
 #include <memory>
 #include <vector>
 
+// Boost Includes
+#include <boost/core/noncopyable.hpp>
+
 // SDL Includes
 #include <SDL2/SDL.h>
 
@@ -24,14 +27,29 @@
 
 namespace GDev{
 
+//! The window exception class
+class WindowException : public std::runtime_error
+{
+public:
+  WindowException( const std::string& message )
+    : std::runtime_error( message )
+  { /* ... */ }
+
+  ~WindowException() throw()
+  { /* ... */ }
+};
+
 /*! The window wrapper class
  * \details The wrapper class does not allow copy construction or assignment.
  * If multiple "copies" are needed, use a smart pointer class.
  */
-class Window
+class Window : private boost::noncopyable
 {
 
 public:
+
+  //! The exception class
+  typedef WindowException ExceptionType;
 
   //! Constructor
   Window( const std::string& window_title,
@@ -50,8 +68,11 @@ public:
   //! Get the window title
   std::string getTitle() const;
 
-  //! Get a copy of the window surface
-  std::shared_ptr<Surface> getSurface() const;
+  //! Get the window surface
+  const Surface& getSurface() const;
+
+  //! Get the window surface
+  Surface& getSurface();
 
   //! Get the width of the window
   int getWidth() const;
@@ -72,7 +93,7 @@ public:
   int getMinHeight() const;
 
   //! Set the size of the window
-  void setSize( const int width, const in height );
+  void setSize( const int width, const int height );
 
   //! Get the window x position
   int getXPosition() const;
@@ -93,7 +114,7 @@ public:
   int getDisplayIndex() const;
 
   //! Get the window display mode
-  SDL_DisplayMode getDisplayMode() const;
+  void getDisplayMode( SDL_DisplayMode& mode ) const;
 
   //! Set the window display mode
   void setDisplayMode( const SDL_DisplayMode& mode );
@@ -148,43 +169,31 @@ public:
   //! Confine mouse to window (grabbed input)
   void confineMouseToWindow();
 
+  //! Free mouse from window (grabbed input)
+  void freeMouseFromWindow();
+
   //! Check if the mouse is confined to a window (grabbed input)
   bool isMouseConfinedToWindow() const;
 
-  //! Update the screen (copy window surface to screen)
-  void updateScreen();
+  //! Update the window surface (copy window surface to screen)
+  void updateWindowSurface();
 
   //! Update the screen (copy areas of the window surface to the screen)
-  void updateScreen( const std::vector<SDL_Rect>& update_areas );
+  void updateWindowSurface( const std::vector<SDL_Rect>& update_areas );
 
 private:
+ 
+  // Free the window
+  void free();
 
   // Do not allow default construction
   Window();
-
-  // Do not allow copy construction
-  Window( const Window& other_window );
-
-  // Do not allow assignment
-  Window& operator=( const Window& other_window );
 
   // The SDL window 
   SDL_Window* d_window;
 
   // The window surface wrapper
   std::shared_ptr<Surface> d_window_surface_wrapper;
-};
-
-//! The window exception class
-class WindowException : public std::runtime_error
-{
-public:
-  WindowException( const std::string& message )
-    : std::runtime_error( message )
-  { /* ... */ }
-
-  ~WindowException() throw()
-  { /* ... */ }
 };
 
 } // end GDev namespace

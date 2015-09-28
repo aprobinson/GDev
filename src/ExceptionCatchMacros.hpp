@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------//
 //!
-//! \file   Utility_ExceptionCatchMacros.hpp
+//! \file   ExceptionCatchMacros.hpp
 //! \author Alex Robinson
 //! \brief  Macros for catching Exceptions
 //!

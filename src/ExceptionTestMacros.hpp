@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------//
 //!
-//! \file   Utility_ExceptionTestMacros.hpp
+//! \file   ExceptionTestMacros.hpp
 //! \author Alex Robinson
 //! \brief  Macros that test if an exception has occured and throw if so
 //!

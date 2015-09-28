@@ -18,25 +18,36 @@
 
 // GDev Includes
 #include "Surface.hpp"
-#include "Texture.hpp"
 #include "Window.hpp"
 
 namespace GDev{
 
-//! The renderer wrapper class
-class Renderer
+//! The renderer exception class
+class RendererException : public std::runtime_error
+{
+public:
+  RendererException( const std::string& message )
+    : std::runtime_error( message )
+  { /* ... */ }
+
+  ~RendererException() throw()
+  { /* ... */ }
+};
+
+/*! The renderer wrapper class
+ * \details The wrapper class does not allow copy construction or assignment.
+ * If multiple "copies" are needed, use a smart pointer class.
+ */
+class Renderer 
 {
 
 public:
 
-  //! Window constructor
-  Renderer( const Window& window );
-
-  //! Surface constructor
-  Renderer( const Surface& surface );
+  //! The exception class
+  typedef RendererException ExceptionType;
 
   //! Destructor
-  ~Renderer();
+  virtual ~Renderer();
   
   //! Get the output size of the renderer
   void getOutputSize( int& output_width, int& output_height ) const;
@@ -81,21 +92,14 @@ public:
   //! Set the drawing area for the current target
   void setViewport( const SDL_Rect& viewport_rectangle );
 
+  //! Get the raw renderer pointer
+  const SDL_Renderer* getRawRendererPtr() const;
+
+  //! Get the raw renderer pointer
+  SDL_Renderer* getRawRendererPtr();
+
   //! Clear the current rendering target with the drawing color
-  void clearCurrentTarget() const;
-
-  //! Copy the texture to the current rendering target
-  void copyTexture( const Texture& texture,
-		    const SDL_Rect* texture_rect = NULL,
-		    const SDL_Rect* target_rect = NULL );
-
-  //! Copy the texture to the current rendering target
-  void copyTexture( const Texture& texture,
-		    const SDL_Rect* texture_rect = NULL,
-		    const SDL_Rect* target_rect = NULL,
-		    const double rotation_angle = 0.0,
-		    const SDL_Point* rotation_center = NULL,
-		    const SDL_RendererFlip flip = SDL_FLIP_NONE );
+  void clearCurrentTarget();
 
   //! Draw a line on the current rendering target
   void drawLine( const int start_x_position,
@@ -107,7 +111,7 @@ public:
   void drawLines( const std::vector<SDL_Point>& end_points );
 
   //! Draw a point on the current rendering target
-  void drawPoints( const int x_position, const int y_position );
+  void drawPoint( const int x_position, const int y_position );
 
   //! Draw points on the current rendering target
   void drawPoints( const std::vector<SDL_Point>& points );
@@ -120,14 +124,15 @@ public:
   void drawRectangles( const std::vector<SDL_Rect>& rectangles,
 		       const bool fill );
 
-  //! Create a texture
-  std::shared_ptr<Texture> createTexture( const Uint32 pixel_format,
-					  const int texture_access,
-					  const unsigned texture_width,
-					  const unsigned texture_height );
+protected:
 
-  //! Create a texture from a surface
-  std::shared_ptr<Texture> createTextureFromSurface( const Surface& surface );
+  //! Window constructor
+  Renderer( Window& window,
+	    const int driver_index,
+	    const Uint32 renderer_flags );
+
+  //! Surface constructor
+  Renderer( Surface& surface );
 
 private:
 
@@ -137,17 +142,8 @@ private:
   //! Do not allow default construction
   Renderer();
 
-  //! Do not allow copy construction
-  Renderer( const Renderer& other_surface );
-
-  //! Do not allow assignment
-  Renderer& operator=( const Renderer& other_renderer );
-
   // The SDL renderer
   SDL_Renderer* d_renderer;
-
-  // Flag that indicates if the wrapper owns the renderer
-  bool d_owns_renderer;
 };
 
 } // end GDev
