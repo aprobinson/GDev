@@ -118,7 +118,7 @@ ENDIF()
 
 # Enable BOOST Support
 IF(BOOST_PREFIX)
-  ENABLE_BOOST_SUPPORT(program_options serialization thread timer chrono)
+  ENABLE_BOOST_SUPPORT(program_options serialization thread timer chrono test_exec_monitor)
 ELSE()
   MESSAGE(STATUS "The BOOST_PREFIX has not been set. The system default will be used.")
 ENDIF()
@@ -129,6 +129,7 @@ IF(${PROJECT_NAME}_ENABLE_DBC)
     SET(HAVE_${PROJECT_NAME}_DBC "1")
   ELSE()
     SET(HAVE_${PROJECT_NAME}_DBC "0")
+  ENDIF()
 ELSE()
   SET(HAVE_${PROJECT_NAME}_DBC "0")
 ENDIF()
@@ -136,8 +137,15 @@ ENDIF()
 # Parse the DBC configure file so it can be used in source files
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/dbc_config.hpp.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_dbc_config.hpp)
 
+# Add the CMAKE_BINARY_DIR to the include path to access config files
+INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
+
+# Allow CXX11 support
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fext-numeric-literals")
+
 # Set up the project directory hierarchy
 ADD_SUBDIRECTORY(src)
+INCLUDE_DIRECTORIES(src)
 
 ADD_SUBDIRECTORY(test)
 

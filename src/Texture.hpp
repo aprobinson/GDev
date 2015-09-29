@@ -63,16 +63,16 @@ public:
 
   //! Surface constructor
   Texture( const std::shared_ptr<Renderer>& renderer,
-	   const Surface& surface );
+	   Surface& surface );
 
   //! Image constructor
-  Texture( const std::shared_prt<Renderer>& renderer,
+  Texture( const std::shared_ptr<Renderer>& renderer,
 	   const std::string& image_name );
 
   //! Text constructor
   Texture( const std::shared_ptr<Renderer>& renderer,
 	   const std::string& message,
-	   const TTF_Font& font,
+	   const Font& font,
 	   const SDL_Color& text_color,
 	   const SDL_Color* background_color = NULL );
 
@@ -86,10 +86,10 @@ public:
   unsigned getHeight() const;
 
   //! Get the alpha modulation
-  Unit8 getAlphaMod() const;
+  Uint8 getAlphaMod() const;
 
   //! Set the alpha modulation
-  void setAlphaMod( const Unit8 alpha ) const;
+  void setAlphaMod( const Uint8 alpha );
 
   //! Get the color modulation
   void getColorMod( Uint8& red, Uint8& green, Uint8& blue ) const;
@@ -135,13 +135,19 @@ private:
   // The SDL texture
   SDL_Texture* d_texture;
 
+  // The width of the texture
+  int d_width;
+
+  // The height of the texture
+  int d_height;
+
   // The renderer used by the texture
   std::shared_ptr<Renderer> d_renderer;
 };
 
 } // end GDev namespace
 
-// end GDEV_TEXTURE_HPP
+#endif // end GDEV_TEXTURE_HPP
 
 //---------------------------------------------------------------------------//
 // end Texture.hpp

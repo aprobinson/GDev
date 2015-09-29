@@ -22,6 +22,8 @@
 #include "Renderer.hpp"
 #include "Surface.hpp"
 
+namespace GDev{
+
 /*! The window renderer wrapper class
  * \details The wrapper class does not allow copy construction or assignment.
  * If multiple "copies" are needed, use a smart pointer class. This class
@@ -48,6 +50,8 @@ private:
   // The surface to render to
   std::shared_ptr<Surface> d_surface;  
 };
+
+} // end GDev namespace
 
 #endif // end GDEV_SURFACE_RENDERER_HPP
 

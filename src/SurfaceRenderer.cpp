@@ -7,7 +7,7 @@
 //---------------------------------------------------------------------------//
 
 // GDev Includes
-#include "WindowRenderer.hpp"
+#include "SurfaceRenderer.hpp"
 #include "ExceptionTestMacros.hpp"
 #include "DBCMacros.hpp"
 

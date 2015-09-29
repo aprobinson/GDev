@@ -17,7 +17,9 @@ namespace GDev{
 Renderer::Renderer( Window& window,
 		    const int driver_index,
 		    const Uint32 renderer_flags )
-  : d_renderer( SDL_CreateRenderer( &window, driver_index, renderer_flags ) )
+  : d_renderer( SDL_CreateRenderer( window.getRawWindowPtr(), 
+				    driver_index, 
+				    renderer_flags ) )
 {
   // Make sure the renderer was created successfully
   TEST_FOR_EXCEPTION( d_renderer == NULL,
@@ -28,8 +30,8 @@ Renderer::Renderer( Window& window,
 }
 
 // Surface constructor
-Renderer::Renderer( const Surface& surface )
-  : d_renderer( SDL_CreateSoftwareRenderer( &surface )
+Renderer::Renderer( Surface& surface )
+  : d_renderer( SDL_CreateSoftwareRenderer( surface.getRawSurfacePtr() ) )
 {
   // Make sure the renderer was created successfully
   TEST_FOR_EXCEPTION( d_renderer == NULL,
@@ -50,7 +52,7 @@ void Renderer::getOutputSize( int& output_width, int& output_height ) const
   int return_value = 
     SDL_GetRendererOutputSize( const_cast<SDL_Renderer*>( d_renderer ),
 			       &output_width,
-			       &outout_height );
+			       &output_height );
 
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,
@@ -163,11 +165,11 @@ void Renderer::setDrawColor( const SDL_Color& draw_color )
 }
 
 // Check if clipping is enabled
-bool Renderer::isClippingEnabled() const
-{
-  return 
-    SDL_TRUE == SDL_RenderIsClipEnabled(const_cast<SDL_Renderer*>(d_renderer));
-}
+// bool Renderer::isClippingEnabled() const
+// {
+//   return 
+//     SDL_TRUE == SDL_RenderIsClipEnabled(const_cast<SDL_Renderer*>(d_renderer));
+// }
 
 // Get the clip rectangle for the current target
 void Renderer::getClipRectangle( SDL_Rect& clip_rectangle ) const
@@ -283,7 +285,7 @@ void Renderer::drawPoints( const std::vector<SDL_Point>& points )
 
   int return_value = SDL_RenderDrawPoints( d_renderer,
 					   &points[0],
-					   point.size() );
+					   points.size() );
 
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,

@@ -12,7 +12,7 @@
 // GDev Includes
 #include "Surface.hpp"
 #include "ExceptionTestMacros.hpp"
-#include "DBCException.hpp"
+#include "DBCMacros.hpp"
 
 namespace GDev{
 
@@ -53,16 +53,18 @@ Surface::Surface( const std::string& message,
 
   if( background_color != NULL )
   {
-    d_surface = TTF_RenderText_Shaded( font.getRawFontPtr(), 
-				       message.c_str(), 
-				       text_color,
-				       *background_color );
+    d_surface = 
+      TTF_RenderText_Shaded( const_cast<TTF_Font*>( font.getRawFontPtr() ),
+			     message.c_str(), 
+			     text_color,
+			     *background_color );
   }
   else
   {
-    d_surface = TTF_RenderText_Solid( font.getRawFontPtr(), 
-				      message.c_str(), 
-				      text_color );
+    d_surface = 
+      TTF_RenderText_Solid( const_cast<TTF_Font*>( font.getRawFontPtr() ),
+			    message.c_str(), 
+			    text_color );
   }
 
   TEST_FOR_EXCEPTION( d_surface == NULL,
@@ -73,7 +75,7 @@ Surface::Surface( const std::string& message,
 }
 
 // Existing surface constructor (will not take ownership)
-Surface::Surface( const SDL_Surface* existing_surface )
+Surface::Surface( SDL_Surface* existing_surface )
   : d_surface( existing_surface ),
     d_owns_surface( false )
 {
@@ -94,13 +96,13 @@ bool Surface::isLocallyOwned() const
 }
 
 // Get the width of the surface
-int Surface::getWidth() const
+unsigned Surface::getWidth() const
 {
   return d_surface->w;
 }
 
 // Get the height of the surface
-int Surface::getHeight() const
+unsigned Surface::getHeight() const
 {
   return d_surface->h;
 }
@@ -138,7 +140,7 @@ Uint32 Surface::getColorKey() const
   Uint32 key;
   
   int return_value = 
-    SDL_GetColorKey( std::const_cast<SDL_Surface*>( d_surface ), &key );
+    SDL_GetColorKey( const_cast<SDL_Surface*>( d_surface ), &key );
 
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,
@@ -162,12 +164,12 @@ void Surface::setColorKey( const Uint32 color_key )
 }
 
 // Check if the color key is enabled
-void Surface::isColorKeyEnabled()
+bool Surface::isColorKeyEnabled() const
 {
   Uint32 dummy;
   
   int return_value = 
-    SDL_GetColorKey( const_cast<SDL_Surface*>( d_surface ), &tmp_key );
+    SDL_GetColorKey( const_cast<SDL_Surface*>( d_surface ), &dummy );
 
   TEST_FOR_EXCEPTION( return_value < -1,
 		      ExceptionType,
@@ -189,9 +191,9 @@ void Surface::disableColorKey()
 }
 
 // Get the alpha modulation
-Unit8 Surface::getAlphaMod() const
+Uint8 Surface::getAlphaMod() const
 {
-  Unit8 alpha;
+  Uint8 alpha;
 
   int return_value = 
     SDL_GetSurfaceAlphaMod( const_cast<SDL_Surface*>( d_surface ), &alpha );
@@ -205,7 +207,7 @@ Unit8 Surface::getAlphaMod() const
 }
 
 // Set the alpha modulation
-void Surface::setAlphaMod( const Unit8 alpha )
+void Surface::setAlphaMod( const Uint8 alpha )
 {
   int return_value = SDL_SetSurfaceAlphaMod( d_surface, alpha );
 
@@ -221,7 +223,7 @@ SDL_BlendMode Surface::getBlendMode() const
   SDL_BlendMode mode;
 
   int return_value = 
-    SDL_GetSurfaceBlendMode( const_cast<SDL_Surface*>( d_surface ), mode );
+    SDL_GetSurfaceBlendMode( const_cast<SDL_Surface*>( d_surface ), &mode );
 
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,
@@ -295,9 +297,7 @@ bool Surface::isLocked() const
 // Check if the surface must be locked to access pixels
 bool Surface::mustLock() const
 {
-  SDL_bool must_lock = SDL_MUSTLOCK( const_cast<SDL_Surface*>( d_surface ) );
-
-  return must_lock == SDL_TRUE;
+  return SDL_MUSTLOCK( const_cast<SDL_Surface*>( d_surface ) );
 }
 
 // Lock the surface
@@ -319,8 +319,9 @@ void Surface::unlock()
 
 // Perform a scaled surface copy to the destination surface
 void Surface::blitScaled( Surface& destination_surface,
-			  const SDL_Rect* source_rectangle,
-			  SDL_Rect* destination_rectangle ) const
+			  SDL_Rect* destination_rectangle,
+			  const SDL_Rect* source_rectangle ) const
+			  
 {
   int return_value = SDL_BlitScaled( const_cast<SDL_Surface*>( d_surface ),
 				     source_rectangle,
@@ -336,7 +337,7 @@ void Surface::blitScaled( Surface& destination_surface,
 // Perform a fast surface copy to the destination surface
 void Surface::blitSurface( Surface& destination_surface,
 			   SDL_Rect* destination_rectangle,
-			   const SDL_Rect* source_rectangle ) const;
+			   const SDL_Rect* source_rectangle ) const
 			   
 {
   int return_value = SDL_BlitSurface( const_cast<SDL_Surface*>( d_surface ),

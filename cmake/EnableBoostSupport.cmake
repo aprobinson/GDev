@@ -15,7 +15,7 @@ MACRO(ENABLE_BOOST_SUPPORT)
     SET(Boost_NO_SYSTEM_PATHS ON)
 
     # Check if boost needs to be found
-    FIND_PACKAGE(Boost 1.54.0 REQUIRED COMPONENTS ${ARGN})
+    FIND_PACKAGE(Boost 1.59.0 REQUIRED COMPONENTS ${ARGN})
 
     # Set the include paths for Boost
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})

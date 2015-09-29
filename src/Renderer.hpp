@@ -78,7 +78,7 @@ public:
   void setDrawColor( const SDL_Color& draw_color );
 
   //! Check if clipping is enabled
-  bool isClippingEnabled() const;
+  //bool isClippingEnabled() const;
 
   //! Get the clip rectangle for the current target
   void getClipRectangle( SDL_Rect& clip_rectangle ) const;

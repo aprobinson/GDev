@@ -17,7 +17,7 @@ namespace GDev{
 WindowRenderer::WindowRenderer( const std::shared_ptr<Window>& window,
 				const int driver_index,
 				const Uint32 renderer_flags )
-  : Renderer( *window, false, driver_index, renderer_flags )
+  : Renderer( *window, driver_index, renderer_flags ),
     d_window( window )
 {
   // Make sure the window is valid

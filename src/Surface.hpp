@@ -59,7 +59,7 @@ public:
 	   const SDL_Color* background_color = NULL );
 
   //! Existing surface constructor (will not take ownership)
-  Surface( const SDL_Surface* existing_surface );
+  Surface( SDL_Surface* existing_surface );
 
   //! Destructor
   ~Surface();
@@ -98,10 +98,10 @@ public:
   void disableColorKey();
 
   //! Get the alpha modulation
-  Unit8 getAlphaMod() const;
+  Uint8 getAlphaMod() const;
 
   //! Set the alpha modulation
-  void setAlphaMod( const Unit8 alpha );
+  void setAlphaMod( const Uint8 alpha );
 
   //! Get the blend mode
   SDL_BlendMode getBlendMode() const;

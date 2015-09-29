@@ -26,7 +26,7 @@ Font::Font( const std::string& font_filename, const unsigned font_size )
 
   // Make sure the font was successfully loaded
   TEST_FOR_EXCEPTION( d_font == NULL,
-		      FontException,
+		      ExceptionType,
 		      "Unable to load font from file " << font_filename <<
 		      "! SDL_ttf Error: " << TTF_GetError() );
 }

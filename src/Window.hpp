@@ -23,7 +23,6 @@
 
 // GDev Includes
 #include "Surface.hpp"
-#include "Renderer.hpp"
 
 namespace GDev{
 
@@ -63,7 +62,7 @@ public:
   ~Window();
 
   //! Get the window id
-  Uint32 getID() const;
+  Uint32 getId() const;
 
   //! Get the window title
   std::string getTitle() const;
@@ -74,32 +73,20 @@ public:
   //! Get the window surface
   Surface& getSurface();
 
-  //! Get the width of the window
-  int getWidth() const;
+  //! Get the size of the window
+  void getSize( int& width, int& height ) const;
 
-  //! Get the max width of the window
-  int getMaxWidth() const;
+  //! Get the max size of the window
+  void getMaxSize( int& max_width, int& max_height ) const;
 
-  //! Get the min width of the window
-  int getMinWidth() const;
-
-  //! Get the height of the window
-  int getHeight() const;
-
-  //! Get the max height of the window
-  int getMaxHeight() const;
-
-  //! Get the min height of the window
-  int getMinHeight() const;
+  //! Get the min size of the window
+  void getMinSize( int& min_width, int& min_height ) const;
 
   //! Set the size of the window
   void setSize( const int width, const int height );
 
-  //! Get the window x position
-  int getXPosition() const;
-
-  //! Get the window y position
-  int getYPosition() const;
+  //! Get the window position
+  void getPosition( int& x_position, int& y_position ) const;
 
   //! Set the window position
   void setPosition( const int x_position, const int y_position );

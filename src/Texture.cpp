@@ -11,6 +11,8 @@
 #include "ExceptionTestMacros.hpp"
 #include "DBCMacros.hpp"
 
+namespace GDev{
+
 // Renderer constructor
 Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 	 const Uint32 pixel_format,
@@ -22,6 +24,8 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 				  texture_access,
 				  width,
 				  height ) ),
+    d_width( width ),
+    d_height( height ),
     d_renderer( renderer )	       
 {
   // Make sure the renderer is valid
@@ -36,9 +40,11 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 
 // Surface constructor
 Texture::Texture( const std::shared_ptr<Renderer>& renderer,
-		  const Surface& surface )
+		  Surface& surface )
   : d_texture( SDL_CreateTextureFromSurface( renderer->getRawRendererPtr(),
-					     &surface ) ),
+					     surface.getRawSurfacePtr() ) ),
+    d_width( surface.getWidth() ),
+    d_height( surface.getHeight() ),
     d_renderer( renderer )
 {
   // Make sure the renderer is valid
@@ -52,9 +58,11 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 }
 
 // Image constructor
-Texture::Texture( const std::shared_prt<Renderer>& renderer,
+Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 		  const std::string& image_name )
   : d_texture( NULL ),
+    d_width( 0 ),
+    d_height( 0 ),
     d_renderer( renderer )
 {
   // Make sure the renderer is valid
@@ -65,7 +73,10 @@ Texture::Texture( const std::shared_prt<Renderer>& renderer,
 
   // Create the texture from the surface
   d_texture = SDL_CreateTextureFromSurface( renderer->getRawRendererPtr(),
-					    &tmp_surface );
+					    tmp_surface.getRawSurfacePtr() );
+
+  d_width = tmp_surface.getWidth();
+  d_height = tmp_surface.getHeight();
 
   // Make sure the texture was created successfully
   TEST_FOR_EXCEPTION( d_texture == NULL,
@@ -77,7 +88,7 @@ Texture::Texture( const std::shared_prt<Renderer>& renderer,
 // Text constructor
 Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 		  const std::string& message,
-		  const TTF_Font& font,
+		  const Font& font,
 		  const SDL_Color& text_color,
 		  const SDL_Color* background_color )
   : d_texture( NULL ),
@@ -91,7 +102,10 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 
   // Create the texture from the surface
   d_texture = SDL_CreateTextureFromSurface( renderer->getRawRendererPtr(),
-					    &tmp_surface );
+					    tmp_surface.getRawSurfacePtr() );
+
+  d_width = tmp_surface.getWidth();
+  d_height = tmp_surface.getHeight();
 
   // Make sure the texture was created successfully
   TEST_FOR_EXCEPTION( d_texture == NULL,
@@ -109,19 +123,19 @@ Texture::~Texture()
 // Get the width of the texture
 unsigned Texture::getWidth() const
 {
-  return d_texture->w;
+  return d_width;
 }
 
 // Get the height of the texture
 unsigned Texture::getHeight() const
 {
-  return d_texture->h;
+  return d_height;
 }
 
 // Get the alpha modulation
-Unit8 Texture::getAlphaMod() const
+Uint8 Texture::getAlphaMod() const
 {
-  Unit8 alpha;
+  Uint8 alpha;
   
   int return_value = 
     SDL_GetTextureAlphaMod( const_cast<SDL_Texture*>( d_texture ), &alpha );
@@ -161,9 +175,9 @@ void Texture::getColorMod( Uint8& red, Uint8& green, Uint8& blue ) const
 }
 
 // Set the color modulation
-void Texture::setColorModulation( const Uint8 red, 
-				  const Uint8 green,
-				  const Uint8 blue )
+void Texture::setColorMod( const Uint8 red, 
+			   const Uint8 green,
+			   const Uint8 blue )
 {
   int return_value = SDL_SetTextureColorMod( d_texture, 
 					     red,
@@ -218,18 +232,16 @@ void Texture::render()
 }
 
 // Render the texture will user parameters
-void render( const int x_position,
-	     const int y_position,
-	     const SDL_Rect* texture_clip,
-	     const double rotation_angle,
-	     const SDL_Point* rotation_center,
-	     const SDL_RendererFlip flip )
+void Texture::render( const int x_position,
+		      const int y_position,
+		      const SDL_Rect* texture_clip,
+		      const double rotation_angle,
+		      const SDL_Point* rotation_center,
+		      const SDL_RendererFlip flip )
 {
   // Set the target rectangle where the texture clip will be rendered
-  SDL_Rect target_rect = { x_position, 
-			   y_position, 
-			   this->getWidth(),
-			   this->getHeight() };
+  SDL_Rect target_rect = { x_position, y_position, d_width, d_height };
+			   
 
   // Set the clip rendering dimensions
   if( texture_clip != NULL )
@@ -239,7 +251,7 @@ void render( const int x_position,
   }
 
   this->render( texture_clip, 
-		target_rect, 
+		&target_rect, 
 		rotation_angle, 
 		rotation_center, 
 		flip );
@@ -272,7 +284,12 @@ void Texture::free()
   SDL_DestroyTexture( d_texture );
   
   d_texture = NULL;
+
+  d_width = 0;
+  d_height = 0;
 }
+
+} // end GDev namespace
 
 //---------------------------------------------------------------------------//
 // end Texture.cpp

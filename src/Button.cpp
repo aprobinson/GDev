@@ -19,7 +19,7 @@ void Button::handleAction( const SDL_Event& action )
   {
     if( this->isMouseInButton() )
     {
-      switch( action->type )
+      switch( action.type )
       {
         case SDL_MOUSEMOTION:
 	  this->handleButtonScrollOver();

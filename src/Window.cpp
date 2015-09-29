@@ -50,9 +50,9 @@ Window::~Window()
 }
 
 // Get the window id
-Uint32 Window::getID() const
+Uint32 Window::getId() const
 {
-  return SDL_GetWindowId( const_cast<SDL_Window*>( d_window ) );
+  return SDL_GetWindowID( const_cast<SDL_Window*>( d_window ) );
 }
 
 // Get the window title
@@ -73,40 +73,28 @@ Surface& Window::getSurface()
   return *d_window_surface_wrapper;
 }
 
-// Get the width of the window
-int Window::getWidth() const
+// Get the size of the window
+void Window::getSize( int& width, int& height ) const
 {
-  return d_window->w;
+  SDL_GetWindowSize( const_cast<SDL_Window*>( d_window ),
+		     &width,
+		     &height );
 }
 
-// Get the max width of the window
-int Window::getMaxWidth() const
+// Get the max size of the window
+void Window::getMaxSize( int& max_width, int& max_height ) const
 {
-  return d_window->max_w;
+  SDL_GetWindowMaximumSize( const_cast<SDL_Window*>( d_window ),
+			    &max_width,
+			    &max_height );
 }
 
-// Get the min width of the window
-int Window::getMinWidth() const
+// Get the min size of the window
+void Window::getMinSize( int& min_width, int& max_width ) const
 {
-  return d_window->min_w;
-}
-
-// Get the height of the window
-int Window::getHeight() const
-{
-  return d_window->h;
-}
-
-// Get the max height of the window
-int Window::getMaxHeight() const
-{
-  return d_window->max_h;
-}
-
-// Get the min height of the window
-int Window::getMinHeight() const
-{
-  return d_window->min_h;
+  SDL_GetWindowMinimumSize( const_cast<SDL_Window*>( d_window ),
+			    &min_width,
+			    &max_width );
 }
 
 // Set the size of the window
@@ -115,16 +103,12 @@ void Window::setSize( const int width, const int height )
   SDL_SetWindowSize( d_window, width, height );
 }
 
-// Get the window x position
-int Window::getXPosition() const
+// Get the window position
+void Window::getPosition( int& x_position, int& y_position ) const
 {
-  return d_window->x;
-}
-
-// Get the window y position
-int Window::getYPosition() const
-{
-  return d_window->y;
+  SDL_GetWindowPosition( const_cast<SDL_Window*>( d_window ),
+			 &x_position,
+			 &y_position );
 }
 
 // Set the window position
@@ -153,7 +137,7 @@ void Window::setBrightness( const float brightness )
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,
 		      "Error: The window brightness could not bet set! "
-		      "SDL_Error: " << SDL_Error() );
+		      "SDL_Error: " << SDL_GetError() );
 }
 
 // Get the index of the display associated with a window
@@ -171,18 +155,18 @@ void Window::getDisplayMode( SDL_DisplayMode& mode ) const
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,
 		      "Error: The display mode could not be retrieved! "
-		      "SDL_Error: " << SDL_Error() );
+		      "SDL_Error: " << SDL_GetError() );
 }
 
 // Set the window display mode
 void Window::setDisplayMode( const SDL_DisplayMode& mode )
 {
-  int return_value = SDL_GetWindowDisplayMode( d_window, &mode );
+  int return_value = SDL_SetWindowDisplayMode( d_window, &mode );
 
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,
 		      "Error: The display mode could not be set! "
-		      "SDL_Error: " << SDL_Error() );
+		      "SDL_Error: " << SDL_GetError() );
 }
 
 // Get the window flags
@@ -198,12 +182,12 @@ void Window::getGammaRamp( Uint16& red, Uint16& green, Uint16& blue ) const
     SDL_GetWindowGammaRamp( const_cast<SDL_Window*>( d_window ),
 			    &red,
 			    &green,
-			    &blude );
+			    &blue );
 
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,
 		      "Error: The gamma ramp could not be retrieved! "
-		      "SDL_Error: " << SDL_Error() );
+		      "SDL_Error: " << SDL_GetError() );
 }
 
 // Set the gamma ramp for the display that owns the window
@@ -211,12 +195,12 @@ void Window::setGammaRamp( const Uint16 red,
 			   const Uint16 green,
 			   const Uint16 blue )
 {
-  int return_value = SDL_SetWindowGammaRamp( d_window, red, green, blue );
+  int return_value = SDL_SetWindowGammaRamp( d_window, &red, &green, &blue );
 
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,
 		      "Error: The gamma ramp could not be set! "
-		      "SDL_Error: " << SDL_Error() );
+		      "SDL_Error: " << SDL_GetError() );
 }
 
 // Get the window pixel format
@@ -240,7 +224,7 @@ SDL_Window* Window::getRawWindowPtr()
 // Set the window icon
 void Window::setIcon( Surface& icon_surface )
 {
-  SDL_SetWindowIcon( d_window, &icon_surface );
+  SDL_SetWindowIcon( d_window, icon_surface.getRawSurfacePtr() );
 }
 
 // Hide the window

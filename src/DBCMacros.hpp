@@ -29,7 +29,7 @@
  * of macros and an exception class.
  */
 
-#if HAVE_GDEV_DBC
+#if HAVE_GDev_DBC
 
 /*! Test a function precondition
  * \ingroup contract_exceptions_macros 
@@ -110,7 +110,7 @@
 #define testNestedConditionsEnd(depth)
 #define remember(...)
 
-#endif // end HAVE_GDEV_DBC
+#endif // end HAVE_GDev_DBC
 
 /*! test a templated function static precondition
  * \ingroup contract_exceptions_macros
