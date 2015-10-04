@@ -99,10 +99,10 @@ When you run `ls` from your working directory you should see the following: `GDe
 
 ### Building Boost
 1. download the [Boost 1.59.0 source](http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz/download)
-2. move the boost_1_56_0.tar.gz file to the boost directory (e.g. software/boost)
+2. move the boost_1_59_0.tar.gz file to the boost directory (e.g. software/boost)
 3. move to the boost directory
-4. run `tar -xvf boost_1_56_0.tar.gz`
-5. move to the boost_1_56_0 directory (e.g. software/boost/boost_1_56_0)
+4. run `tar -xvf boost_1_59_0.tar.gz`
+5. move to the boost_1_59_0 directory (e.g. software/boost/boost_1_59_0)
 6. run `./bootstrap.sh --prefix=absolute-path-to_software/boost`
 7. run `./b2`
 8. run `./b2 install`
