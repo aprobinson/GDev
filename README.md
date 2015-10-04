@@ -5,7 +5,7 @@ Installation {#installation}
 1. [GNU Compiler 4.7.3+](https://gcc.gnu.org/)
 2. [CMake 3.0.1+](http://www.cmake.org/)
 3. [Doxygen 1.8.8](http://www.stack.nl/~dimitri/doxygen/index.html)
-3. [Boost 1.56.0+](http://www.boost.org/)
+3. [Boost 1.59.0+](http://www.boost.org/)
 4. [SDL 2.0.3+](https://www.libsdl.org/download-2.0.php)
 5. [SDL_image 2.0.0+](https://www.libsdl.org/projects/SDL_image/)
 6. [SDL_ttf 2.0.12+](https://www.libsdl.org/projects/SDL_ttf/)
@@ -98,7 +98,7 @@ When you run `ls` from your working directory you should see the following: `GDe
 12. run `exec bash`
 
 ### Building Boost
-1. download the [Boost 1.56.0 source](http://sourceforge.net/projects/boost/files/boost/1.56.0/)
+1. download the [Boost 1.59.0 source](http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz/download)
 2. move the boost_1_56_0.tar.gz file to the boost directory (e.g. software/boost)
 3. move to the boost directory
 4. run `tar -xvf boost_1_56_0.tar.gz`
