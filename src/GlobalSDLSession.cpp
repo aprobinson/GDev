@@ -98,6 +98,30 @@ bool GlobalSDLSession::isSDLFinalized()
   return s_sdl_finalized;
 }
 
+// Delay for the desired number of milliseconds
+void GlobalSDLSession::delay( const Uint32 delay_time )
+{
+  SDL_Delay( delay_time );
+}
+
+// Get the number of milliseconds (tics) since SDL initialized
+Uint32 GlobalSDLSession::getMilliseconds()
+{
+  // Make sure that SDL is initialized
+  testPrecondition( GlobalSDLSession::isSDLInitialized() );
+  
+  return SDL_GetTicks();
+}
+
+// Get the time (in seconds) since SDL initialized
+double GlobalSDLSession::getTime()
+{
+  // Make sure that SDL is initialized
+  testPrecondition( GlobalSDLSession::isSDLInitialized() );
+  
+  return SDL_GetTicks()/1000.0;
+}
+
 // Initialize SDL
 void GlobalSDLSession::initialize( std::ostream* out )
 {

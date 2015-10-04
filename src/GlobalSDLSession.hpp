@@ -37,6 +37,15 @@ public:
   //! Check if SDL is finalized
   static bool isSDLFinalized();
 
+  //! Delay for the desired number of milliseconds
+  static void delay( const Uint32 delay_time );
+
+  //! Get the number of milliseconds since SDL initialized
+  static Uint32 getMilliseconds();
+
+  //! Get the time (in seconds) since SDL initialized
+  static double getTime();
+
 private:
 
   // Initialize SDL
