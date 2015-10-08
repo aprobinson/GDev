@@ -369,7 +369,8 @@ void Surface::exportToBMP( const std::string bmp_file_name ) const
 // Free the surface
 void Surface::free()
 {
-  SDL_FreeSurface( d_surface );
+  if( d_owns_surface )
+    SDL_FreeSurface( d_surface );
 
   d_surface = NULL;
 }
