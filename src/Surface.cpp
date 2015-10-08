@@ -126,9 +126,12 @@ const SDL_Rect& Surface::getClipRectangle() const
 }
 
 // Set the SDL_Rect structure used to clip blits to the surface
-void Surface::setClipRectangle( const SDL_Rect& clip_rectangle )
+bool Surface::setClipRectangle( const SDL_Rect& clip_rectangle )
 {
-  SDL_SetClipRect( d_surface, &clip_rectangle );
+  if( SDL_SetClipRect( d_surface, &clip_rectangle ) == SDL_TRUE )
+    return true;
+  else
+    return false;
 }
 
 // Get the color key (transparent pixel) for the surface
@@ -369,6 +372,7 @@ void Surface::exportToBMP( const std::string bmp_file_name ) const
 // Free the surface
 void Surface::free()
 {
+ 
   SDL_FreeSurface( d_surface );
 
   d_surface = NULL;

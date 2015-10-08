@@ -83,7 +83,7 @@ public:
   const SDL_Rect& getClipRectangle() const;
 
   //! Set the SDL_Rect structure used to clip blits to the surface
-  void setClipRectangle( const SDL_Rect& clip_rectangle );
+  bool setClipRectangle( const SDL_Rect& clip_rectangle );
 
   //! Check if the color key is enabled
   bool isColorKeyEnabled() const;
