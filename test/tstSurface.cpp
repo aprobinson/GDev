@@ -141,7 +141,16 @@ BOOST_AUTO_TEST_CASE( getPixelFormat )
 // Check that the SDL Rect structure used to clip blits
 // to the surface can be returned and set
 BOOST_AUTO_TEST_CASE( get_set_ClipRectangle )
-{ 
+{
+  GDev::Surface surface( test_image_filename );
+  SDL_Rect test_rect = {0,0,10,15};
+
+  BOOST_CHECK_NO_THROW( surface.setClipRectangle( test_rect ));
+  BOOST_CHECK_EQUAL( surface.getClipRectangle().x, 0 );
+  // Will truncate values to fit screen
+  BOOST_CHECK_EQUAL( surface.getClipRectangle().y, 0 );
+  BOOST_CHECK_EQUAL( surface.getClipRectangle().w, 10 );
+  BOOST_CHECK_EQUAL( surface.getClipRectangle().h, 15 );
 }
 
 // Check that isColorKeyEnabled works
@@ -229,22 +238,39 @@ BOOST_AUTO_TEST_CASE( getRawSurfacePointer )
 // Check that isLocked works
 BOOST_AUTO_TEST_CASE( isLocked )
 {
+  GDev::Surface surface( test_image_filename );
+
+  surface.unlock();
+  BOOST_CHECK_NO_THROW( surface.lock() );
+  BOOST_CHECK( surface.isLocked() );
 }
 
 // Check that mustLock works
 BOOST_AUTO_TEST_CASE( mustLock )
 {
+  GDev::Surface surface( test_image_filename );
+  // My sample picture does not need to be locked to access pixels
+  BOOST_CHECK( !surface.mustLock() );
 }
 
 // Check that a surface can be locked
 BOOST_AUTO_TEST_CASE( lock )
 {
-  //exception
+  GDev::Surface surface( test_image_filename );
+
+  surface.unlock();
+  BOOST_CHECK_NO_THROW( surface.lock() );
+  BOOST_CHECK( surface.isLocked() );
 }
 
 // Check that a surface can be unlocked
 BOOST_AUTO_TEST_CASE( unlock )
 {
+  GDev::Surface surface( test_image_filename );
+
+  BOOST_CHECK_NO_THROW( surface.lock() );
+  surface.unlock();
+  BOOST_CHECK( !surface.isLocked() );
 }
 
 // Check that blitScaled works
@@ -266,7 +292,7 @@ BOOST_AUTO_TEST_CASE( exportToBMP )
 }
 
 
-  
+ 
   
 BOOST_AUTO_TEST_SUITE_END()
 
