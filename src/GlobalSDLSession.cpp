@@ -104,8 +104,8 @@ void GlobalSDLSession::delay( const Uint32 delay_time )
   SDL_Delay( delay_time );
 }
 
-// Get the number of milliseconds (tics) since SDL initialized
-Uint32 GlobalSDLSession::getMilliseconds()
+// Get the number of tics (milliseconds) since SDL initialized
+Uint32 GlobalSDLSession::getTics()
 {
   // Make sure that SDL is initialized
   testPrecondition( GlobalSDLSession::isSDLInitialized() );

@@ -2,7 +2,7 @@
 //!
 //! \file   Texture.hpp
 //! \author Alex Robinson, Sean Robinson
-//! \brief  The texture class declaration
+//! \brief  The texture base class declaration
 //!
 //---------------------------------------------------------------------------//
 
@@ -42,7 +42,7 @@ public:
   { /* ... */ }
 };
 
-/*! The texture wrapper class
+/*! The texture wrapper base class
  * \details The wrapper class does not allow copy construction or assignment.
  * If multiple "copies" are needed, use a smart pointer class.
  */
@@ -53,31 +53,9 @@ public:
 
   //! The exception class
   typedef TextureException ExceptionType;
-  
-  //! Renderer constructor
-  Texture( const std::shared_ptr<Renderer>& renderer,
-	   const Uint32 pixel_format,
-	   const int texture_access,
-	   const unsigned width,
-	   const unsigned height );
-
-  //! Surface constructor
-  Texture( const std::shared_ptr<Renderer>& renderer,
-	   Surface& surface );
-
-  //! Image constructor
-  Texture( const std::shared_ptr<Renderer>& renderer,
-	   const std::string& image_name );
-
-  //! Text constructor
-  Texture( const std::shared_ptr<Renderer>& renderer,
-	   const std::string& message,
-	   const Font& font,
-	   const SDL_Color& text_color,
-	   const SDL_Color* background_color = NULL );
 
   //! Destructor
-  ~Texture();
+  virtual ~Texture();
 
   //! Get the width of the texture
   unsigned getWidth() const;
@@ -107,8 +85,8 @@ public:
   Uint32 getFormat() const;
 
   //! Get the access pattern
-  int getAccessPattern() const;
-  
+  SDL_TextureAccess getAccessPattern() const;
+
   //! Render the texture
   void render();
 
@@ -127,10 +105,43 @@ public:
 	       const SDL_Point* rotation_center = NULL,
 	       const SDL_RendererFlip flip = SDL_FLIP_NONE );
 
+protected:
+
+  //! Blank texture constructor
+  Texture( const std::shared_ptr<Renderer>& renderer,
+	   const SDL_TextureAccess access,
+	   const Uint32 format,
+	   const unsigned width,
+	   const unsigned height );
+
+  //! Surface constructor
+  Texture( const std::shared_ptr<Renderer>& renderer,
+	   Surface& surface );
+
+  //! Image constructor
+  Texture( const std::shared_ptr<Renderer>& renderer,
+	   const std::string& image_name );	   
+
+  //! Text constructor
+  Texture( const std::shared_ptr<Renderer>& renderer,
+	   const std::string& message,
+	   const Font& font,
+	   const SDL_Color& text_color,
+	   const SDL_Color* background_color );
+
+  //! Get the renderer
+  const Renderer& getRenderer() const;
+
+  //! Get the renderer
+  Renderer& getRenderer() const;
+
 private:
 
   // Free the texture
   void free();
+
+  // Load the texture format
+  void loadTextureFormat();
 
   // The SDL texture
   SDL_Texture* d_texture;
@@ -140,6 +151,12 @@ private:
 
   // The height of the texture
   int d_height;
+
+  // The texture access pattern
+  SDL_TextureAccess d_access_pattern;
+
+  // The texture format
+  Uint32 d_format;
 
   // The renderer used by the texture
   std::shared_ptr<Renderer> d_renderer;

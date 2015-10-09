@@ -6,6 +6,9 @@
 //!
 //---------------------------------------------------------------------------//
 
+// Std Lib Includes
+#include <algorithm>
+
 // GDev Includes
 #include "Renderer.hpp"
 #include "ExceptionTestMacros.hpp"
@@ -19,7 +22,12 @@ Renderer::Renderer( Window& window,
 		    const Uint32 renderer_flags )
   : d_renderer( SDL_CreateRenderer( window.getRawWindowPtr(), 
 				    driver_index, 
-				    renderer_flags ) )
+				    renderer_flags ) ),
+    d_name(),
+    d_max_texture_width(),
+    d_max_texture_height(),
+    d_supported_flags(),
+    d_supported_texture_formats()
 {
   // Make sure the renderer was created successfully
   TEST_FOR_EXCEPTION( d_renderer == NULL,
@@ -27,23 +35,74 @@ Renderer::Renderer( Window& window,
 		      "Error: The renderer could not be created for window "
 		      << window.getId() << "! SDL_Error: " 
 		      << SDL_GetError() );
+
+  this->loadRendererInfo();
 }
 
 // Surface constructor
 Renderer::Renderer( Surface& surface )
-  : d_renderer( SDL_CreateSoftwareRenderer( surface.getRawSurfacePtr() ) )
+  : d_renderer( SDL_CreateSoftwareRenderer( surface.getRawSurfacePtr() ) ),
+    d_name(),
+    d_max_texture_width(),
+    d_max_texture_height(),
+    d_supported_flags(),
+    d_supported_texture_formats()
 {
   // Make sure the renderer was created successfully
   TEST_FOR_EXCEPTION( d_renderer == NULL,
 		      ExceptionType,
 		      "Error: The renderer could not be created for the "
 		      "surface! SDL_Error: " << SDL_GetError() );
+
+  this->loadRendererInfo();
 }
 
 // Destructor
 Renderer::~Renderer()
 {
   this->free();
+}
+
+// Get the name of the renderer
+const std::string& Renderer::getName() const
+{
+  return d_name;
+}
+
+// Get the supported renderer flags
+Uint32 Renderer::getSupportedFlags() const
+{
+  return d_supported_flags;
+}
+
+// Get the valid texture formats
+const std::vector<Uint32>& Renderer::getValidTextureFormats() const
+{
+  return d_supported_texture_formats;
+}
+  
+// Check if the texture format is valid
+bool Renderer::isValidTextureFormat( const Uint32 format ) const
+{
+  std::vector<Uint32>::const_iterator it;
+
+  it = std::find( d_supported_texture_formats.begin(),
+		  d_supported_texture_formats.end(),
+		  format );
+
+  return it != d_supported_texture_formats.end();
+}
+
+// Get the max texture width
+unsigned Renderer::getMaxTextureWidth() const
+{
+  return d_max_texture_width;
+}
+
+// Get the max texture height
+unsigned Renderer::getMaxTextureHeight() const
+{
+  return d_max_texture_height;
 }
   
 // Get the output size of the renderer
@@ -219,6 +278,30 @@ SDL_Renderer* Renderer::getRawRendererPtr()
   return d_renderer;
 }
 
+// Check if the current rendering target is the default target
+bool Renderer::isCurrentTargetDefault() const
+{
+  return SDL_GetRenderTarget(const_cast<SDL_Renderer*>( d_renderer )) == NULL;
+}
+
+// Check if non-default targets are supported
+boll Renderer::isNonDefaultTargetSupported() const
+{
+  return SDL_RenderTargetSupported( const_cast<SDL_Renderer*>( d_renderer ) )==
+    SDL_TRUE;
+}
+
+// Set the current target to the default
+void Renderer::setCurrentTargetDefault()
+{
+  int return_value = SDL_SetRenderTarget( d_renderer, NULL );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The default rendering target could not be set! "
+		      "SDL_Error: " << SDL_GetError() );
+}
+
 // Clear the current rendering target with the drawing color
 void Renderer::clearCurrentTarget()
 {
@@ -344,6 +427,29 @@ void Renderer::free()
   SDL_DestroyRenderer( d_renderer );
 
   d_renderer = NULL;
+}
+
+// Load the renderer info
+void Renderer::loadRendererInfo()
+{
+  SDL_RendererInfo info;
+  
+  int return_value = SDL_GetRendererInfo( d_renderer, &info );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The renderer info could not be retrieved! "
+		      "SDL_Error: " << SDL_GetError() );
+
+  d_name = info.name;
+  d_max_texture_width = info.max_texture_width;
+  d_max_texture_height = info.max_texture_height;
+  d_supported_flags = info.flags;
+  
+  d_supported_texture_formats.resise( info.num_texture_formats );
+
+  for( unsigned i = 0; i < d_supported_texture_formats.size(); ++i )
+    d_supported_texture_formats[i] = info.texture_formats[i];
 }
 
 } // end GDev namespace

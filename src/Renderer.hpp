@@ -11,6 +11,7 @@
 
 // Std Lib Includes
 #include <string>
+#include <vector>
 #include <stdexcept>
 
 // SDL Includes
@@ -48,6 +49,24 @@ public:
 
   //! Destructor
   virtual ~Renderer();
+
+  //! Get the name of the renderer
+  const std::string& getName() const;
+
+  //! Get the supported renderer flags
+  Uint32 getSupportedFlags() const;
+
+  //! Get the valid texture formats
+  const std::vector<Uint32>& getValidTextureFormats() const;
+  
+  //! Check if the texture format is valid
+  bool isValidTextureFormat( const Uint32 format ) const;
+
+  //! Get the max texture width
+  unsigned getMaxTextureWidth() const;
+
+  //! Get the max texture height
+  unsigned getMaxTextureHeight() const;
   
   //! Get the output size of the renderer
   void getOutputSize( int& output_width, int& output_height ) const;
@@ -98,6 +117,15 @@ public:
   //! Get the raw renderer pointer
   SDL_Renderer* getRawRendererPtr();
 
+  //! Check if the current rendering target is the default target
+  bool isCurrentTargetDefault() const;
+
+  //! Check if non-default targets are supported
+  boll isNonDefaultTargetSupported() const;
+
+  //! Set the current target to the default
+  void setCurrentTargetDefault();
+
   //! Clear the current rendering target with the drawing color
   void clearCurrentTarget();
 
@@ -139,11 +167,29 @@ private:
   //! Free the renderer
   void free();
 
+  //! Load the renderer info
+  void loadRendererInfo();
+
   //! Do not allow default construction
   Renderer();
 
   // The SDL renderer
   SDL_Renderer* d_renderer;
+
+  // The renderer name
+  std::string d_name;
+
+  // The max texture width
+  unsigned d_max_texture_width;
+
+  // The max texture height
+  unsigned d_max_texture_height;
+
+  // Supported renderer flags
+  Uint32 d_supported_flags;
+
+  // Supported texture formats
+  std::vector<Uint32> d_supported_texture_formats;
 };
 
 } // end GDev

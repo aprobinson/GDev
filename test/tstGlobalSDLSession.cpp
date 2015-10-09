@@ -46,24 +46,41 @@ BOOST_AUTO_TEST_CASE( constructor,
 }
 
 //---------------------------------------------------------------------------//
-// Check that the number of milliseconds since initialization can be returned
-BOOST_AUTO_TEST_CASE( getMilliseconds,
+// Check that the number of tics since initialization can be returned
+BOOST_AUTO_TEST_CASE( getTics,
 		      * boost::unit_test::depends_on("constructor") )
 {
-  Uint32 time_1 = GDev::GlobalSDLSession::getMilliseconds();
+  Uint32 time_1 = GDev::GlobalSDLSession::getTics();
   BOOST_CHECK( time_1 > 0 );
 
   GDev::GlobalSDLSession::delay( 1 );
 
-  Uint32 time_2 = GDev::GlobalSDLSession::getMilliseconds();
+  Uint32 time_2 = GDev::GlobalSDLSession::getTics();
   
   BOOST_CHECK_EQUAL( time_2, time_1+1 );
 }
 
 //---------------------------------------------------------------------------//
+// Check that the time since initialized can be returned
+BOOST_AUTO_TEST_CASE( getTime,
+		      * boost::unit_test::depends_on("constructor") )
+{
+  double time_1 = GDev::GlobalSDLSession::getTime();
+  BOOST_CHECK( time_1 > 0 );
+
+  GDev::GlobalSDLSession::delay( 10 );
+
+  double time_2 = GDev::GlobalSDLSession::getTime();
+
+  BOOST_CHECK_CLOSE( time_2, time_1+0.01, 1e-9 );
+}
+
+//---------------------------------------------------------------------------//
 // Check that the destructor finalizes SDL
 BOOST_AUTO_TEST_CASE( destructor,
-		      * boost::unit_test::depends_on("constructor") )
+		      * boost::unit_test::depends_on("constructor")
+		      * boost::unit_test::depends_on("getTics")
+		      * boost::unit_test::depends_on("getTime") )
 {
   session.reset();
   

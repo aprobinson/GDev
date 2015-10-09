@@ -58,6 +58,10 @@ public:
 	   const SDL_Color& text_color,
 	   const SDL_Color* background_color = NULL );
 
+  //! Surface conversion constructor
+  Surface( const Surface& other_surface,
+	   const Uint32 pixel_format );
+
   //! Existing surface constructor (will not take ownership)
   Surface( SDL_Surface* existing_surface );
 
@@ -78,6 +82,9 @@ public:
 
   //! Get the format of the pixels stored in the surface
   const SDL_PixelFormat& getPixelFormat() const;
+
+  //! Get the number of surface pixels
+  unsigned getNumberOfPixels() const;
 
   //! Get the SDL_Rect structure used to clip blits to the surface
   const SDL_Rect& getClipRectangle() const;
@@ -132,6 +139,9 @@ public:
 
   //! Unlock the surface (to acces pixels)
   void unlock();
+
+  //! Get the surface pixels
+  const void* getPixels() const;
 
   //! Perform a scaled surface copy to the destination surface
   void blitScaled( Surface& destination_surface,

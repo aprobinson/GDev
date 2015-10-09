@@ -74,6 +74,26 @@ Surface::Surface( const std::string& message,
     
 }
 
+// Surface conversion constructor
+/*! \details The wrapper will own the constructed SDL_Surface 
+ * (memory management will be handled internally).
+ */
+Surface::Surface( const Surface& other_surface,
+		  const Uint32 pixel_format )
+  : d_surface( NULL ),
+    d_owns_surface( true )
+{
+  d_surface = SDL_ConvertSurfaceFormat( 
+		  const_cast<SDL_Surface*>( other_surface.getRawSurfacePtr() ),
+		  pixel_format,
+		  0 );
+
+  TEST_FOR_EXCEPTION( d_surface == NULL,
+		      ExceptionType,
+		      "Error: Unable to convert the existing surface to the "
+		      "requested format! SDL_Error: " << SDL_GetError() );
+}
+
 // Existing surface constructor (will not take ownership)
 Surface::Surface( SDL_Surface* existing_surface )
   : d_surface( existing_surface ),
@@ -308,6 +328,9 @@ bool Surface::mustLock() const
 // Lock the surface
 void Surface::lock()
 {
+  // Make sure the surface is unlocked
+  testPrecondition( !this->isLocked() );
+  
   int return_value = SDL_LockSurface( d_surface );
 
   TEST_FOR_EXCEPTION( return_value != 0,
@@ -319,7 +342,23 @@ void Surface::lock()
 // Unlock the surface
 void Surface::unlock()
 {
+  // Make sure the surface is already locked
+  testPrecondition( this->isLocked() );
+  
   SDL_UnlockSurface( d_surface );
+}
+
+// Get the surface pixels
+const void* Surface::getPixels() const
+{
+  return d_surface->pixels;
+}
+
+// Get the number of surface pixels
+unsigned Surface::getNumberOfPixels() const
+{
+  return this->getPitch()*this->getHeight()/
+    this->getPixelFormat().BytesPerPixel;
 }
 
 // Perform a scaled surface copy to the destination surface

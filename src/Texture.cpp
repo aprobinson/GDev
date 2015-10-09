@@ -15,36 +15,49 @@ namespace GDev{
 
 // Renderer constructor
 Texture::Texture( const std::shared_ptr<Renderer>& renderer,
-	 const Uint32 pixel_format,
-	 const int texture_access,
+	 const Uint32 format,
+	 const SDL_TextureAccess access,
 	 const unsigned width,
 	 const unsigned height )
   : d_texture( SDL_CreateTexture( renderer->getRawRendererPtr(),
-				  pixel_format,
-				  texture_access,
+				  format,
+				  access,
 				  width,
 				  height ) ),
     d_width( width ),
     d_height( height ),
+    d_access_pattern( access ),
+    d_format(),
     d_renderer( renderer )	       
 {
   // Make sure the renderer is valid
   testPrecondition( d_renderer );
+  // Make sure the format is valid
+  testPrecondition( d_renderer->isValidTextureFormat( format ) );
+  // Make sure the access pattern is valid
+  testPrecondition( d_access != SDL_TEXTUREACCESS_STATIC );
+  // Make sure the texture size is valid
+  testPrecondition( width <= d_renderer->getMaxTextureWidth() );
+  testPrecondition( height <= d_renderer->getMaxTextureHeight() );
 
   // Make sure the texture was created successfully
   TEST_FOR_EXCEPTION( d_texture == NULL,
 		      ExceptionType,
 		      "Error: The texture could not be created! "
 		      "SDL_Error: " << SDL_GetError() );
+
+  this->loadTextureFormat();
 }
 
 // Surface constructor
 Texture::Texture( const std::shared_ptr<Renderer>& renderer,
-		  Surface& surface )
+		  const Surface& surface )
   : d_texture( SDL_CreateTextureFromSurface( renderer->getRawRendererPtr(),
 					     surface.getRawSurfacePtr() ) ),
     d_width( surface.getWidth() ),
     d_height( surface.getHeight() ),
+    d_access_pattern( SDL_TEXTUREACCESS_STATIC ),
+    d_format(),
     d_renderer( renderer )
 {
   // Make sure the renderer is valid
@@ -55,6 +68,9 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 		      ExceptionType,
 		      "Error: The texture could not be created! "
 		      "SDL_Error: " << SDL_GetError() );
+
+  // Get the texture format
+  this->loadTextureFormat();
 }
 
 // Image constructor
@@ -63,6 +79,8 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
   : d_texture( NULL ),
     d_width( 0 ),
     d_height( 0 ),
+    d_access_pattern( SDL_TEXTUREACCESS_STATIC ),
+    d_format()
     d_renderer( renderer )
 {
   // Make sure the renderer is valid
@@ -83,6 +101,8 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 		      ExceptionType,
 		      "Error: The texture could not be created! "
 		      "SDL_Error: " << SDL_GetError() );
+
+  this->loadTextureFormat();
 }
 
 // Text constructor
@@ -92,6 +112,10 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 		  const SDL_Color& text_color,
 		  const SDL_Color* background_color )
   : d_texture( NULL ),
+    d_width(),
+    d_height(),
+    d_access_pattern( SDL_TEXTUREACCESS_STATIC ),
+    d_format()
     d_renderer( renderer )
 {
   // Make sure the renderer is valid
@@ -112,6 +136,8 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 		      ExceptionType,
 		      "Error: The texture could not be created! "
 		      "SDL_Error: " << SDL_GetError() );
+
+  this->loadTextureFormat();
 }
 
 // Destructor
@@ -217,6 +243,18 @@ void Texture::setBlendMode( const SDL_BlendMode mode )
 		      "texture! SDL_Error: " << SDL_GetError() );
 }
 
+// Get the texture format
+Uint32 Texture::getFormat() const
+{
+  return d_format;
+}
+
+// Get the access pattern
+SDL_TextureAccess getAccessPattern() const
+{
+  return d_access_pattern;
+}
+
 // Render the texture with default parameters
 void Texture::render()
 {
@@ -277,6 +315,18 @@ void Texture::render( const SDL_Rect* texture_rect,
 		      "Error: The texture could not be rendered! "
 		      "SDL_Error: " << SDL_GetError() );
 }
+
+// Get the renderer
+const Renderer& Texture::getRenderer() const
+{
+  return *d_renderer;
+}
+
+// Get the renderer
+Renderer& Texture::getRenderer() const
+{
+  return *d_renderer;
+}
   
 // Free texture
 void Texture::free()
@@ -287,6 +337,22 @@ void Texture::free()
 
   d_width = 0;
   d_height = 0;
+}
+
+// Load the texture format
+void Texture::loadTextureFormat()
+{
+  // Get the texture format
+  int return_value = SDL_QueryTexture( const_cast<SDL_Texture*>( d_texture ),
+				       &d_format,
+				       NULL,
+				       NULL,
+				       NULL );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The texture format could not be retrieved! "
+		      "SDL_Error: " << SDL_GetError() );
 }
 
 } // end GDev namespace
