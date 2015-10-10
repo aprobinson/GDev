@@ -128,8 +128,8 @@ void Renderer::getLogicalSize( int& logical_width, int& logical_height ) const
 }
 
 // Set the logical size of the renderer
-void Renderer::setLogicalSize( const unsigned logical_width,
-			       const unsigned logical_height )
+void Renderer::setLogicalSize( const int logical_width,
+			       const int logical_height )
 {
   int return_value = 
     SDL_RenderSetLogicalSize( d_renderer, logical_width, logical_height );
@@ -256,6 +256,8 @@ void Renderer::getViewport( SDL_Rect& viewport_rectangle ) const
 }
 
 // Set the drawing area for the current target
+/*! \details 
+ */
 void Renderer::setViewport( const SDL_Rect& viewport_rectangle )
 {
   int return_value = SDL_RenderSetViewport( d_renderer, &viewport_rectangle );

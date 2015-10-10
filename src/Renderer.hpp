@@ -75,8 +75,7 @@ public:
   void getLogicalSize( int& logical_width, int& logical_height ) const;
 
   //! Set the logical size of the renderer
-  void setLogicalSize( const unsigned logical_width, 
-		       const unsigned logical_height );
+  void setLogicalSize( const int logical_width, const int logical_height );
 
   //! Get the drawing scale for the current target
   void getScale( float& x_scale, float& y_scale ) const;
