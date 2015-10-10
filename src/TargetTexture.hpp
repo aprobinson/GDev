@@ -10,12 +10,12 @@
 #define GDEV_TARGET_TEXTURE_HPP
 
 // GDev Includes
-#include "TargetTexture.hpp"
+#include "Texture.hpp"
 
 namespace GDev{
 
 //! The target texture wrapper class
-class TargetTexture : public Texture, private boost::noncopyable
+class TargetTexture : public Texture
 {
 
 public:
@@ -29,6 +29,9 @@ public:
   //! Destructor
   ~TargetTexture()
   { /* ... */ }
+
+  //! Get the access pattern
+  SDL_TextureAccess getAccessPattern() const;
 
   //! Check if this is the rendering target
   bool isRenderTarget() const;

@@ -49,6 +49,9 @@ public:
   //! The exception class
   typedef SurfaceException ExceptionType;
 
+  //! Blank constructor
+  Surface( const int width, const int height, const Uint32 pixel_format );
+
   //! Image constructor
   Surface( const std::string& image_name );
 
@@ -72,16 +75,19 @@ public:
   bool isLocallyOwned() const;
 
   //! Get the width of the surface
-  unsigned getWidth() const;
+  int getWidth() const;
 
   //! Get the height of the surface
-  unsigned getHeight() const;
+  int getHeight() const;
 
   //! Get the length of a row of pixels in bytes (pitch)
   int getPitch() const;
 
   //! Get the format of the pixels stored in the surface
   const SDL_PixelFormat& getPixelFormat() const;
+
+  //! Get the pixel format enum
+  Uint32 getPixelFormatValue() const;  
 
   //! Get the number of surface pixels
   unsigned getNumberOfPixels() const;
@@ -92,8 +98,8 @@ public:
   //! Set the SDL_Rect structure used to clip blits to the surface
   void setClipRectangle( const SDL_Rect& clip_rectangle );
 
-  //! Check if the color key is enabled
-  bool isColorKeyEnabled() const;
+  //! Check if the color key is set
+  bool isColorKeySet() const;
 
   //! Get the color key (transparent pixel) for the surface
   Uint32 getColorKey() const;
@@ -101,8 +107,8 @@ public:
   //! Set the color key (transparent pixel) for the surface
   void setColorKey( const Uint32 color_key );
 
-  //! Disable the color key (transparent pixel)
-  void disableColorKey();
+  //! Unset the color key (transparent pixel)
+  void unsetColorKey();
 
   //! Get the alpha modulation
   Uint8 getAlphaMod() const;

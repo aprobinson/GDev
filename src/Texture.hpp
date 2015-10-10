@@ -85,7 +85,13 @@ public:
   Uint32 getFormat() const;
 
   //! Get the access pattern
-  SDL_TextureAccess getAccessPattern() const;
+  virtual SDL_TextureAccess getAccessPattern() const = 0;
+
+  //! Get the raw texture pointer (potentially dangerous)
+  const SDL_Texture* getRawTexturePtr() const;
+
+  //! Get the raw texture pointer (potentially dangerous)
+  SDL_Texture* getRawTexturePtr();
 
   //! Render the texture
   void render();
@@ -116,7 +122,7 @@ protected:
 
   //! Surface constructor
   Texture( const std::shared_ptr<Renderer>& renderer,
-	   Surface& surface );
+	   const Surface& surface );
 
   //! Image constructor
   Texture( const std::shared_ptr<Renderer>& renderer,
@@ -133,7 +139,7 @@ protected:
   const Renderer& getRenderer() const;
 
   //! Get the renderer
-  Renderer& getRenderer() const;
+  Renderer& getRenderer();
 
 private:
 
@@ -151,9 +157,6 @@ private:
 
   // The height of the texture
   int d_height;
-
-  // The texture access pattern
-  SDL_TextureAccess d_access_pattern;
 
   // The texture format
   Uint32 d_format;

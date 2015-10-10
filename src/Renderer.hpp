@@ -121,7 +121,7 @@ public:
   bool isCurrentTargetDefault() const;
 
   //! Check if non-default targets are supported
-  boll isNonDefaultTargetSupported() const;
+  bool isNonDefaultTargetSupported() const;
 
   //! Set the current target to the default
   void setCurrentTargetDefault();

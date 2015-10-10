@@ -285,7 +285,7 @@ bool Renderer::isCurrentTargetDefault() const
 }
 
 // Check if non-default targets are supported
-boll Renderer::isNonDefaultTargetSupported() const
+bool Renderer::isNonDefaultTargetSupported() const
 {
   return SDL_RenderTargetSupported( const_cast<SDL_Renderer*>( d_renderer ) )==
     SDL_TRUE;
@@ -446,7 +446,7 @@ void Renderer::loadRendererInfo()
   d_max_texture_height = info.max_texture_height;
   d_supported_flags = info.flags;
   
-  d_supported_texture_formats.resise( info.num_texture_formats );
+  d_supported_texture_formats.resize( info.num_texture_formats );
 
   for( unsigned i = 0; i < d_supported_texture_formats.size(); ++i )
     d_supported_texture_formats[i] = info.texture_formats[i];

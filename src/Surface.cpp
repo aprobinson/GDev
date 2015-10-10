@@ -16,6 +16,49 @@
 
 namespace GDev{
 
+// Blank constructor
+Surface::Surface( const int width,
+		  const int height,
+		  const Uint32 pixel_format )
+  : d_surface( NULL ),
+    d_owns_surface( true )
+{
+  // Make sure the dimensions are valid
+  testPrecondition( width > 0 );
+  testPrecondition( height > 0 );
+
+  int bits_per_pixel;
+  Uint32 rmask, gmask, bmask, amask;
+
+  SDL_bool return_value = SDL_PixelFormatEnumToMasks( pixel_format,
+						      &bits_per_pixel,
+						      &rmask,
+						      &gmask,
+						      &bmask,
+						      &amask );
+
+  TEST_FOR_EXCEPTION( return_value != SDL_TRUE,
+		      ExceptionType,
+		      "Error: The pixel format " << 
+		      SDL_GetPixelFormatName( pixel_format ) <<
+		      " could not be used to create a blank surface! "
+		      "SDL_Error: " << SDL_GetError() );
+
+  d_surface = SDL_CreateRGBSurface( 0, 
+				    width,
+				    height,
+				    bits_per_pixel,
+				    rmask,
+				    gmask,
+				    bmask,
+				    amask );
+
+  TEST_FOR_EXCEPTION( d_surface == NULL,
+		      ExceptionType,
+		      "Error: The blank surface could not be created! "
+		      "SDL_Error: " << SDL_GetError() );
+}
+
 // Image constructor
 /*! \details .png, .jpg and .bmp are all supported file formats. The wrapper
  * will own the constructed SDL_Surface (memory management will be handled
@@ -116,13 +159,13 @@ bool Surface::isLocallyOwned() const
 }
 
 // Get the width of the surface
-unsigned Surface::getWidth() const
+int Surface::getWidth() const
 {
   return d_surface->w;
 }
 
 // Get the height of the surface
-unsigned Surface::getHeight() const
+int Surface::getHeight() const
 {
   return d_surface->h;
 }
@@ -137,6 +180,12 @@ int Surface::getPitch() const
 const SDL_PixelFormat& Surface::getPixelFormat() const
 {
   return *d_surface->format;
+}
+
+// Get the pixel format enum
+Uint32 Surface::getPixelFormatValue() const
+{
+  return d_surface->format->format;
 }
 
 // Get the SDL_Rect structure used to clip blits to the surface
@@ -160,7 +209,7 @@ void Surface::setClipRectangle( const SDL_Rect& clip_rectangle )
 Uint32 Surface::getColorKey() const
 {
   // Make sure the color key is enabled
-  testPrecondition( this->isColorKeyEnabled() );
+  testPrecondition( this->isColorKeySet() );
   
   Uint32 key;
   
@@ -188,8 +237,8 @@ void Surface::setColorKey( const Uint32 color_key )
 		      "SDL_Error: " << SDL_GetError() );
 }
 
-// Check if the color key is enabled
-bool Surface::isColorKeyEnabled() const
+// Check if the color key is set
+bool Surface::isColorKeySet() const
 {
   Uint32 dummy;
   
@@ -204,8 +253,8 @@ bool Surface::isColorKeyEnabled() const
   return return_value == 0;
 }
 
-// Disable the color key (transparent pixel)
-void Surface::disableColorKey()
+// Unset the color key (transparent pixel)
+void Surface::unsetColorKey()
 {
   int return_value = SDL_SetColorKey( d_surface, SDL_FALSE, 0 );
 

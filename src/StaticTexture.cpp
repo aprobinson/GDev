@@ -43,6 +43,12 @@ StaticTexture::StaticTexture( const std::shared_ptr<Renderer>& renderer,
   testPrecondition( renderer );
 }
 
+// Get the access pattern
+SDL_TextureAccess StaticTexture::getAccessPattern() const
+{
+  return SDL_TEXTUREACCESS_STATIC;
+}
+
 } // end GDev namespace
 
 //---------------------------------------------------------------------------//

@@ -18,13 +18,19 @@ namespace GDev{
 
 // Blank constructor 
 StreamingTexture::StreamingTexture( const std::shared_ptr<Renderer>& renderer,
-		  const int width,
-		  const int height,
-		  const Uint32 format = SDL_PIXELFORMAT_ARGB8888 ) 
+				    const int width,
+				    const int height,
+				    const Uint32 format )
   : Texture( renderer, SDL_TEXTUREACCESS_STREAMING, format, width, height )
 {
   // Make sure the renderer is valid
-  testPrecondition( d_renderer );
+  testPrecondition( renderer );
+}
+
+// Get the access pattern
+SDL_TextureAccess StreamingTexture::getAccessPattern() const
+{
+  return SDL_TEXTUREACCESS_STREAMING;
 }
 
 // Check if the texture is locked
@@ -59,7 +65,7 @@ void StreamingTexture::copy( const void* pixels, const unsigned num_pixels )
   // Determine the number of pixels to copy
   size_t num_pixels_to_copy;
   
-  if( num_pixels < d_num_locke_pixels )
+  if( num_pixels < d_num_locked_pixels )
     num_pixels_to_copy = num_pixels;
   else
     num_pixels_to_copy = d_num_locked_pixels;

@@ -13,12 +13,12 @@
 
 namespace GDev{
 
-// Renderer constructor
+// Blank constructor
 Texture::Texture( const std::shared_ptr<Renderer>& renderer,
-	 const Uint32 format,
-	 const SDL_TextureAccess access,
-	 const unsigned width,
-	 const unsigned height )
+		  const SDL_TextureAccess access,
+		  const Uint32 format,
+		  const unsigned width,
+		  const unsigned height )
   : d_texture( SDL_CreateTexture( renderer->getRawRendererPtr(),
 				  format,
 				  access,
@@ -26,19 +26,18 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 				  height ) ),
     d_width( width ),
     d_height( height ),
-    d_access_pattern( access ),
     d_format(),
     d_renderer( renderer )	       
 {
   // Make sure the renderer is valid
-  testPrecondition( d_renderer );
+  testPrecondition( renderer );
   // Make sure the format is valid
-  testPrecondition( d_renderer->isValidTextureFormat( format ) );
+  testPrecondition( renderer->isValidTextureFormat( format ) );
   // Make sure the access pattern is valid
-  testPrecondition( d_access != SDL_TEXTUREACCESS_STATIC );
+  testPrecondition( access != SDL_TEXTUREACCESS_STATIC );
   // Make sure the texture size is valid
-  testPrecondition( width <= d_renderer->getMaxTextureWidth() );
-  testPrecondition( height <= d_renderer->getMaxTextureHeight() );
+  testPrecondition( width <= renderer->getMaxTextureWidth() );
+  testPrecondition( height <= renderer->getMaxTextureHeight() );
 
   // Make sure the texture was created successfully
   TEST_FOR_EXCEPTION( d_texture == NULL,
@@ -52,16 +51,16 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 // Surface constructor
 Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 		  const Surface& surface )
-  : d_texture( SDL_CreateTextureFromSurface( renderer->getRawRendererPtr(),
-					     surface.getRawSurfacePtr() ) ),
+  : d_texture( SDL_CreateTextureFromSurface( 
+		    renderer->getRawRendererPtr(),
+		    const_cast<SDL_Surface*>( surface.getRawSurfacePtr() ) ) ),
     d_width( surface.getWidth() ),
     d_height( surface.getHeight() ),
-    d_access_pattern( SDL_TEXTUREACCESS_STATIC ),
     d_format(),
     d_renderer( renderer )
 {
   // Make sure the renderer is valid
-  testPrecondition( d_renderer );
+  testPrecondition( renderer );
 
   // Make sure the texture was created successfully
   TEST_FOR_EXCEPTION( d_texture == NULL,
@@ -79,12 +78,11 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
   : d_texture( NULL ),
     d_width( 0 ),
     d_height( 0 ),
-    d_access_pattern( SDL_TEXTUREACCESS_STATIC ),
-    d_format()
+    d_format(),
     d_renderer( renderer )
 {
   // Make sure the renderer is valid
-  testPrecondition( d_renderer );
+  testPrecondition( renderer );
   
   // Create a surface for the image
   Surface tmp_surface( image_name );
@@ -114,12 +112,11 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
   : d_texture( NULL ),
     d_width(),
     d_height(),
-    d_access_pattern( SDL_TEXTUREACCESS_STATIC ),
-    d_format()
+    d_format(),
     d_renderer( renderer )
 {
   // Make sure the renderer is valid
-  testPrecondition( d_renderer );
+  testPrecondition( renderer );
 
   // Create a surface for the image
   Surface tmp_surface( message, font, text_color, background_color );
@@ -249,10 +246,16 @@ Uint32 Texture::getFormat() const
   return d_format;
 }
 
-// Get the access pattern
-SDL_TextureAccess getAccessPattern() const
+// Get the raw texture pointer (potentially dangerous)
+const SDL_Texture* Texture::getRawTexturePtr() const
 {
-  return d_access_pattern;
+  return d_texture;
+}
+
+// Get the raw texture pointer (potentially dangerous)
+SDL_Texture* Texture::getRawTexturePtr()
+{
+  return d_texture;
 }
 
 // Render the texture with default parameters
@@ -323,7 +326,7 @@ const Renderer& Texture::getRenderer() const
 }
 
 // Get the renderer
-Renderer& Texture::getRenderer() const
+Renderer& Texture::getRenderer()
 {
   return *d_renderer;
 }

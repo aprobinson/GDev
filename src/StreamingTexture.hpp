@@ -11,11 +11,12 @@
 
 // GDev Includes
 #include "StreamingTexture.hpp"
+#include "Texture.hpp"
 
 namespace GDev{
 
 //! The streaming texture wrapper class
-class StreamingTexture : public Texture, private boost::noncopyable
+class StreamingTexture : public Texture
 {
 
 public:
@@ -30,6 +31,9 @@ public:
   ~StreamingTexture()
   { /* ... */ }
 
+  //! Get the access pattern
+  SDL_TextureAccess getAccessPattern() const;
+
   //! Check if the texture is locked
   bool isLocked();
 
@@ -39,9 +43,7 @@ public:
 private:
 
   //! Copy the pixels to the texture
-  void copy( const void* pixels, 
-	     const unsigned num_pixels,
-	     const Uint32 pixel_format );
+  void copy( const void* pixels, const unsigned num_pixels );
 
   //! Lock the texture
   void lock();

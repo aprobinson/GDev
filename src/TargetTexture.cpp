@@ -8,7 +8,7 @@
 
 // GDev Includes
 #include "TargetTexture.hpp"
-#include "ExceptionTextMacros.hpp"
+#include "ExceptionTestMacros.hpp"
 #include "DBCMacros.hpp"
 
 namespace GDev{
@@ -21,8 +21,14 @@ TargetTexture::TargetTexture( const std::shared_ptr<Renderer>& renderer,
   : Texture( renderer, SDL_TEXTUREACCESS_TARGET, format, width, height )
 {
   // Make sure the renderer is valid
-  testPrecondition( d_renderer );
-  testPrecondition( d_renderer->isNonDefaultTargetSupported() );
+  testPrecondition( renderer );
+  testPrecondition( renderer->isNonDefaultTargetSupported() );
+}
+
+// Get the access pattern
+SDL_TextureAccess TargetTexture::getAccessPattern() const
+{
+  return SDL_TEXTUREACCESS_TARGET;
 }
 
 // Check if this is the rendering target

@@ -15,7 +15,7 @@
 namespace GDev{
 
 //! The static texture wrapper class
-class StaticTexture : public Texture, private boost::noncopyable
+class StaticTexture : public Texture
 {
   
 public:
@@ -38,6 +38,9 @@ public:
   //! Destructor
   ~StaticTexture()
   { /* ... */ }
+
+  //! Get the access pattern
+  SDL_TextureAccess getAccessPattern() const;
 
 private:
 
