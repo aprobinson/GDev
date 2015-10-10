@@ -73,8 +73,11 @@ public:
   //! Get the window surface
   Surface& getSurface();
 
-  //! Get the size of the window
-  void getSize( int& width, int& height ) const;
+  //! Get the width of the window
+  int getWidth() const;
+
+  //! Get the height of the window
+  int getHeight() const;
 
   //! Get the max size of the window
   void getMaxSize( int& max_width, int& max_height ) const;

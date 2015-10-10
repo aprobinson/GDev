@@ -73,12 +73,24 @@ Surface& Window::getSurface()
   return *d_window_surface_wrapper;
 }
 
-// Get the size of the window
-void Window::getSize( int& width, int& height ) const
+// Get the width of the window
+int Window::getWidth() const
 {
-  SDL_GetWindowSize( const_cast<SDL_Window*>( d_window ),
-		     &width,
-		     &height );
+  int width;
+  
+  SDL_GetWindowSize( const_cast<SDL_Window*>( d_window ), &width, NULL );
+
+  return width;
+}
+
+// Get the height of the window
+int Window::getHeight() const
+{
+  int height;
+  
+  SDL_GetWindowSize( const_cast<SDL_Window*>( d_window ), NULL, &height );
+
+  return height;
 }
 
 // Get the max size of the window

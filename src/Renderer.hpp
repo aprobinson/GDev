@@ -110,6 +110,9 @@ public:
   //! Set the drawing area for the current target
   void setViewport( const SDL_Rect& viewport_rectangle );
 
+  //! Reset the viewport to the entire target
+  virtual void resetViewport() = 0;
+
   //! Get the raw renderer pointer
   const SDL_Renderer* getRawRendererPtr() const;
 

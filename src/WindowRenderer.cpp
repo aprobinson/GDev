@@ -24,6 +24,14 @@ WindowRenderer::WindowRenderer( const std::shared_ptr<Window>& window,
   testPrecondition( window );
 }
 
+// Reset the viewport to the entire target
+void WindowRenderer::resetViewport()
+{
+  SDL_Rect viewport = {0, 0, d_window->getWidth(), d_window->getHeight()};
+
+  this->setViewport( viewport );
+}
+
 } // end GDev namespace
 
 //---------------------------------------------------------------------------//

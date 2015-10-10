@@ -239,7 +239,19 @@ BOOST_AUTO_TEST_CASE( get_setClipRectangle )
 
 //---------------------------------------------------------------------------//
 // Check that the viewport can be returned
+BOOST_AUTO_TEST_CASE( get_setViewport )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
 
+  SDL_Rect read_viewport;
+
+  renderer.getViewport( read_viewport );
+
+  BOOST_CHECK_EQUAL( read_viewport.x, 0 );
+  BOOST_CHECK_EQUAL( read_viewport.y, 0 );
+  BOOST_CHECK_EQUAL( read_viewport.w, 800 );
+  BOOST_CHECK_EQUAL( read_viewport.h, 600 );
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 

@@ -128,6 +128,9 @@ void Renderer::getLogicalSize( int& logical_width, int& logical_height ) const
 }
 
 // Set the logical size of the renderer
+/*! \details This will set the device independent resolution of the renderer.
+ * If this has not been set zero will be returned.
+ */
 void Renderer::setLogicalSize( const int logical_width,
 			       const int logical_height )
 {
@@ -249,6 +252,8 @@ void Renderer::setClipRectangle( const SDL_Rect& clip_rectangle )
 }
 
 // Get the drawing area for the current target
+/*! \details The default viewport is the entire target.
+ */ 
 void Renderer::getViewport( SDL_Rect& viewport_rectangle ) const
 {
   SDL_RenderGetViewport( const_cast<SDL_Renderer*>( d_renderer ),
@@ -256,8 +261,6 @@ void Renderer::getViewport( SDL_Rect& viewport_rectangle ) const
 }
 
 // Set the drawing area for the current target
-/*! \details 
- */
 void Renderer::setViewport( const SDL_Rect& viewport_rectangle )
 {
   int return_value = SDL_RenderSetViewport( d_renderer, &viewport_rectangle );

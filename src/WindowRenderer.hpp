@@ -44,6 +44,9 @@ public:
   ~WindowRenderer()
   { /* ... */ }
 
+  //! Reset the viewport to the entire target
+  void resetViewport();
+
 private:
 
   // Do not allow default construction

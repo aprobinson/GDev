@@ -27,6 +27,14 @@ SurfaceRenderer::SurfaceRenderer( const std::shared_ptr<Surface>& surface )
   testPrecondition( surface->isLocallyOwned() );
 }
 
+// Reset the viewport to the entire target
+void SurfaceRenderer::resetViewport()
+{
+  SDL_Rect viewport = {0, 0, d_surface->getWidth(), d_surface->getHeight()};
+
+  this->setViewport( viewport );
+}
+
 } // end GDev namespace
 
 //---------------------------------------------------------------------------//
