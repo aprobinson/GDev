@@ -63,10 +63,10 @@ public:
   bool isValidTextureFormat( const Uint32 format ) const;
 
   //! Get the max texture width
-  unsigned getMaxTextureWidth() const;
+  int getMaxTextureWidth() const;
 
   //! Get the max texture height
-  unsigned getMaxTextureHeight() const;
+  int getMaxTextureHeight() const;
   
   //! Get the output size of the renderer
   void getOutputSize( int& output_width, int& output_height ) const;
@@ -129,7 +129,7 @@ public:
   void setCurrentTargetDefault();
 
   //! Clear the current rendering target with the drawing color
-  void clearCurrentTarget();
+  void clear();
 
   //! Draw a line on the current rendering target
   void drawLine( const int start_x_position,
@@ -153,6 +153,9 @@ public:
   //! Draw rectangles on the current rendering target
   void drawRectangles( const std::vector<SDL_Rect>& rectangles,
 		       const bool fill );
+
+  //! Present the drawing
+  void present();
 
 protected:
 
