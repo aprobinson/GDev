@@ -19,6 +19,10 @@ class TargetTexture : public Texture
 {
 
 public:
+  
+  //! Basic blank constructor
+  TargetTexture( const std::shared_ptr<Renderer>& renderer,
+		 const Uint32 format = SDL_PIXELFORMAT_ARGB8888 );
 
   //! Blank constructor
   TargetTexture( const std::shared_ptr<Renderer>& renderer,

@@ -139,6 +139,30 @@ BOOST_AUTO_TEST_CASE( getOutputSize )
 }
 
 //---------------------------------------------------------------------------//
+// Check that the output width can be returned
+BOOST_AUTO_TEST_CASE( getOutputWidth )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+  
+  int output_width;
+
+  BOOST_CHECK_NO_THROW( output_width = renderer.getOutputWidth() );
+  BOOST_CHECK_EQUAL( output_width, 800 );
+}
+
+//---------------------------------------------------------------------------//
+// Check that the output height can be returned
+BOOST_AUTO_TEST_CASE( getOutputHeight )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+  
+  int output_height;
+
+  BOOST_CHECK_NO_THROW( output_height = renderer.getOutputHeight() );
+  BOOST_CHECK_EQUAL( output_height, 600 );
+}
+
+//---------------------------------------------------------------------------//
 // Check that the logical size of the renderer can be returned
 BOOST_AUTO_TEST_CASE( get_setLogicalSize )
 {

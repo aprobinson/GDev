@@ -120,6 +120,42 @@ void Renderer::getOutputSize( int& output_width, int& output_height ) const
 		      "retrieved! SDL_Error: " << SDL_GetError() );
 }
 
+// Get the output width of the renderer
+int Renderer::getOutputWidth() const
+{
+  int output_width;
+  
+  int return_value = 
+    SDL_GetRendererOutputSize( const_cast<SDL_Renderer*>( d_renderer ),
+			       &output_width,
+			       NULL );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The renderer output width could not be "
+		      "retrieved! SDL_Error: " << SDL_GetError() );
+
+  return output_width;
+}
+
+// Get the output height of the renderer
+int Renderer::getOutputHeight() const
+{
+  int output_height;
+  
+  int return_value = 
+    SDL_GetRendererOutputSize( const_cast<SDL_Renderer*>( d_renderer ),
+			       NULL,
+			       &output_height );
+
+  TEST_FOR_EXCEPTION( return_value != 0,
+		      ExceptionType,
+		      "Error: The renderer output height could not be "
+		      "retrieved! SDL_Error: " << SDL_GetError() );
+
+  return output_height;
+}
+
 // Get the logical size of the renderer
 void Renderer::getLogicalSize( int& logical_width, int& logical_height ) const
 {

@@ -26,3 +26,7 @@ ADD_EXECUTABLE(tstStaticTexture tstStaticTexture.cpp)
 TARGET_LINK_LIBRARIES(tstStaticTexture gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
 ADD_TEST(StaticTexture_test tstStaticTexture ${CMAKE_CURRENT_SOURCE_DIR}/test_files/test_image.png ${CMAKE_CURRENT_SOURCE_DIR}/test_files/test_font.ttf)
 
+ADD_EXECUTABLE(tstTargetTexture tstTargetTexture.cpp)
+TARGET_LINK_LIBRARIES(tstTargetTexture gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
+ADD_TEST(TargetTexture_test tstTargetTexture)
+

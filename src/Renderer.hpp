@@ -71,6 +71,12 @@ public:
   //! Get the output size of the renderer
   void getOutputSize( int& output_width, int& output_height ) const;
 
+  //! Get the output width of the renderer
+  int getOutputWidth() const;
+
+  //! Get the output height of the renderer
+  int getOutputHeight() const;
+
   //! Get the logical size of the renderer
   void getLogicalSize( int& logical_width, int& logical_height ) const;
 

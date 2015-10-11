@@ -13,6 +13,23 @@
 
 namespace GDev{
 
+// Basic blank constructor
+/*! \details The size of the texture will be the size of the rendering
+ * target.
+ */ 
+TargetTexture::TargetTexture( const std::shared_ptr<Renderer>& renderer,
+			      const Uint32 format )
+  : Texture( renderer, 
+	     SDL_TEXTUREACCESS_TARGET, 
+	     format,
+	     renderer->getOutputWidth(),
+	     renderer->getOutputHeight() )
+{
+  // Make sure the renderer is valid
+  testPrecondition( renderer );
+  testPrecondition( renderer->isNonDefaultTargetSupported() );
+}
+
 // Blank constructor
 TargetTexture::TargetTexture( const std::shared_ptr<Renderer>& renderer,
 			      const int width,
