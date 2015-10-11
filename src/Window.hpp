@@ -40,7 +40,9 @@ public:
 
 /*! The window wrapper class
  * \details The wrapper class does not allow copy construction or assignment.
- * If multiple "copies" are needed, use a smart pointer class.
+ * If multiple "copies" are needed, use a smart pointer class. Note: The
+ * window surface cannot be returned because window rendering will not
+ * work after SDL_GetWindowSurface is called!
  */
 class Window : private boost::noncopyable
 {
@@ -68,10 +70,10 @@ public:
   std::string getTitle() const;
 
   //! Get the window surface
-  const Surface& getSurface() const;
+  //const Surface& getSurface() const;
 
   //! Get the window surface
-  Surface& getSurface();
+  //Surface& getSurface();
 
   //! Get the width of the window
   int getWidth() const;
@@ -158,10 +160,10 @@ public:
   bool isMouseConfinedToWindow() const;
 
   //! Update the window surface (copy window surface to screen)
-  void updateWindowSurface();
+  //void updateWindowSurface();
 
   //! Update the screen (copy areas of the window surface to the screen)
-  void updateWindowSurface( const std::vector<SDL_Rect>& update_areas );
+  //void updateWindowSurface( const std::vector<SDL_Rect>& update_areas );
 
 private:
  

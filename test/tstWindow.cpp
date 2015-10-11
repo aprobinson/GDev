@@ -77,22 +77,22 @@ BOOST_AUTO_TEST_CASE( getTitle )
 
 //----------------------------------------------------------------------------//
 // Check that the surface of a window can be gotten
-BOOST_AUTO_TEST_CASE( getSurface )
-{
-  GDev::Window window( "test",
-		       SDL_WINDOWPOS_CENTERED,
-		       SDL_WINDOWPOS_CENTERED,
-		       640,
-		       480,
-		       SDL_WINDOW_OPENGL );
-  GDev::Surface& surface = window.getSurface();
-  BOOST_CHECK_EQUAL( surface.getWidth(), 640 );
-  BOOST_CHECK_EQUAL( surface.getHeight(), 480 );
-
-  const GDev::Surface& surface2 = window.getSurface();
-  BOOST_CHECK_EQUAL( surface2.getWidth(), 640 );
-  BOOST_CHECK_EQUAL( surface2.getHeight(), 480 );
- }
+//BOOST_AUTO_TEST_CASE( getSurface )
+//{
+//  GDev::Window window( "test",
+//		       SDL_WINDOWPOS_CENTERED,
+//		       SDL_WINDOWPOS_CENTERED,
+//		       640,
+//		       480,
+//		       SDL_WINDOW_OPENGL );
+//  GDev::Surface& surface = window.getSurface();
+//  BOOST_CHECK_EQUAL( surface.getWidth(), 640 );
+//  BOOST_CHECK_EQUAL( surface.getHeight(), 480 );
+//
+//  const GDev::Surface& surface2 = window.getSurface();
+//  BOOST_CHECK_EQUAL( surface2.getWidth(), 640 );
+//  BOOST_CHECK_EQUAL( surface2.getHeight(), 480 );
+// }
 
 //----------------------------------------------------------------------------//
 // Check that the width of a window can be retrieved
@@ -346,38 +346,38 @@ BOOST_AUTO_TEST_CASE( isMouseConfinedToWindow )
 
 //----------------------------------------------------------------------------//
 // Check that a window can be copied to the screen
-BOOST_AUTO_TEST_CASE( updateWindowSurface )
-{
-  GDev::Window window( "test",
-		       SDL_WINDOWPOS_CENTERED,
-		       SDL_WINDOWPOS_CENTERED,
-		       640,
-		       480,
-		       SDL_WINDOW_OPENGL );
-
-  BOOST_CHECK_NO_THROW( window.updateWindowSurface() ); 
-}
+//BOOST_AUTO_TEST_CASE( updateWindowSurface )
+//{
+//  GDev::Window window( "test",
+//		       SDL_WINDOWPOS_CENTERED,
+//		       SDL_WINDOWPOS_CENTERED,
+//		       640,
+//		       480,
+//		       SDL_WINDOW_OPENGL );
+//
+//  BOOST_CHECK_NO_THROW( window.updateWindowSurface() ); 
+//}
 
 //----------------------------------------------------------------------------//
 // Check that a specific section of a window can be copied to the screen
-BOOST_AUTO_TEST_CASE( updateWindowSurface_areas )
-{
-   GDev::Window window( "test",
-		       SDL_WINDOWPOS_CENTERED,
-		       SDL_WINDOWPOS_CENTERED,
-		       640,
-		       480,
-		       SDL_WINDOW_OPENGL );
-
-   std::vector<SDL_Rect> update_areas(2);
-   update_areas[0] = {10,20,30,40};
-   update_areas[1].x = 50;
-   update_areas[1].y = 60;
-   update_areas[1].w = 70;
-   update_areas[1].h = 80;
-
-   BOOST_CHECK_NO_THROW( window.updateWindowSurface( update_areas ));
-}
+//BOOST_AUTO_TEST_CASE( updateWindowSurface_areas )
+//{
+//   GDev::Window window( "test",
+//		       SDL_WINDOWPOS_CENTERED,
+//		       SDL_WINDOWPOS_CENTERED,
+//		       640,
+//		       480,
+//		       SDL_WINDOW_OPENGL );
+//
+//   std::vector<SDL_Rect> update_areas(2);
+//   update_areas[0] = {10,20,30,40};
+//   update_areas[1].x = 50;
+//   update_areas[1].y = 60;
+//   update_areas[1].w = 70;
+//   update_areas[1].h = 80;
+//
+//   BOOST_CHECK_NO_THROW( window.updateWindowSurface( update_areas ));
+//}
 
 //---------------------------------------------------------------------------//
 // end tstWindow.cpp

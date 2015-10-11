@@ -39,8 +39,8 @@ Window::Window( const std::string& window_title,
 		      " SDL_Error: " << SDL_GetError );
 
   // Create the non-owning window surface wrapper
-  d_window_surface_wrapper.reset( 
-			     new Surface( SDL_GetWindowSurface( d_window ) ) );
+  //d_window_surface_wrapper.reset( 
+  //			     new Surface( SDL_GetWindowSurface( d_window ) ) );
 }
 
 // Destructor
@@ -62,16 +62,16 @@ std::string Window::getTitle() const
 }
 
 // Get the window surface
-const Surface& Window::getSurface() const
-{
-  return *d_window_surface_wrapper;
-}
+//const Surface& Window::getSurface() const
+//{
+//  return *d_window_surface_wrapper;
+//}
 
 // Get the window surface
-Surface& Window::getSurface()
-{
-  return *d_window_surface_wrapper;
-}
+//Surface& Window::getSurface()
+//{
+//  return *d_window_surface_wrapper;
+//}
 
 // Get the width of the window
 int Window::getWidth() const
@@ -285,28 +285,28 @@ bool Window::isMouseConfinedToWindow() const
 }
 
 // Update the screen (copy window surface to screen)
-void Window::updateWindowSurface()
-{
-  int return_value = SDL_UpdateWindowSurface( d_window );
-
-  TEST_FOR_EXCEPTION( return_value != 0,
-		      ExceptionType,
-		      "Error: The window surface could not be updated! "
-		      "SDL_Error: " << SDL_GetError() );
-}
+//void Window::updateWindowSurface()
+//{
+//  int return_value = SDL_UpdateWindowSurface( d_window );
+//
+//  TEST_FOR_EXCEPTION( return_value != 0,
+//		      ExceptionType,
+//		      "Error: The window surface could not be updated! "
+//		      "SDL_Error: " << SDL_GetError() );
+//}
 
 // Update the screen (copy areas of the window surface to the screen)
-void Window::updateWindowSurface( const std::vector<SDL_Rect>& update_areas )
-{
-  int return_value = SDL_UpdateWindowSurfaceRects( d_window,
-						   &update_areas[0],
-						   update_areas.size() );
-
-  TEST_FOR_EXCEPTION( return_value != 0,
-		      ExceptionType,
-		      "Error: The window surface areas could not be updated! "
-		      "SDL_Error: " << SDL_GetError() );
-}
+//void Window::updateWindowSurface( const std::vector<SDL_Rect>& update_areas )
+//{
+//  int return_value = SDL_UpdateWindowSurfaceRects( d_window,
+//						   &update_areas[0],
+//						   update_areas.size() );
+//
+//  TEST_FOR_EXCEPTION( return_value != 0,
+//		      ExceptionType,
+//		      "Error: The window surface areas could not be updated! "
+//		      "SDL_Error: " << SDL_GetError() );
+//}
 
 // Free the window
 void Window::free()
