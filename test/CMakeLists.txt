@@ -10,6 +10,10 @@ ADD_EXECUTABLE(tstSurface tstSurface.cpp)
 TARGET_LINK_LIBRARIES(tstSurface gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
 ADD_TEST(Surface_test tstSurface ${CMAKE_CURRENT_SOURCE_DIR}/test_files/test_image.png ${CMAKE_CURRENT_SOURCE_DIR}/test_files/test_font.ttf)
 
+ADD_EXECUTABLE(tstWindow tstWindow.cpp)
+TARGET_LINK_LIBRARIES(tstWindow gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
+ADD_TEST(Window_test tstWindow) 
+
 ADD_EXECUTABLE(tstSurfaceRenderer tstSurfaceRenderer.cpp)
 TARGET_LINK_LIBRARIES(tstSurfaceRenderer gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
 ADD_TEST(SurfaceRenderer_test tstSurfaceRenderer)

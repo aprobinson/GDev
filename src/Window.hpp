@@ -107,18 +107,10 @@ public:
   void getDisplayMode( SDL_DisplayMode& mode ) const;
 
   //! Set the window display mode
-  void setDisplayMode( const SDL_DisplayMode& mode );
+  void setDisplayMode( const SDL_DisplayMode* mode );
 
   //! Get the window flags
   Uint32 getFlags() const;
-
-  //! Get the gamma ramp for the display that owns the window
-  void getGammaRamp( Uint16& red, Uint16& green, Uint16& blue ) const;
-
-  //! Set the gamma ramp for the display that owns the window
-  void setGammaRamp( const Uint16 red,
-		     const Uint16 green,
-		     const Uint16 blue );
 
   //! Get the window pixel format
   Uint32 getPixelFormat() const;

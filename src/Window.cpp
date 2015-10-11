@@ -155,7 +155,14 @@ void Window::setBrightness( const float brightness )
 // Get the index of the display associated with a window
 int Window::getDisplayIndex() const
 {
-  return SDL_GetWindowDisplayIndex( const_cast<SDL_Window*>( d_window ) );
+  int return_value = SDL_GetWindowDisplayIndex( const_cast<SDL_Window*>( d_window ) );
+
+  TEST_FOR_EXCEPTION( return_value < 0,
+		      ExceptionType,
+		      "Error: The display index could not be retrieved! "
+		      "SDL_Error: " << SDL_GetError() );
+
+  return return_value;
 }
 
 // Get the window display mode
@@ -171,9 +178,9 @@ void Window::getDisplayMode( SDL_DisplayMode& mode ) const
 }
 
 // Set the window display mode
-void Window::setDisplayMode( const SDL_DisplayMode& mode )
+void Window::setDisplayMode( const SDL_DisplayMode* mode )
 {
-  int return_value = SDL_SetWindowDisplayMode( d_window, &mode );
+  int return_value = SDL_SetWindowDisplayMode( d_window, mode );
 
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,
@@ -185,34 +192,6 @@ void Window::setDisplayMode( const SDL_DisplayMode& mode )
 Uint32 Window::getFlags() const
 {
   return SDL_GetWindowFlags( const_cast<SDL_Window*>( d_window ) );
-}
-
-// Get the gamma ramp for the display that owns the window
-void Window::getGammaRamp( Uint16& red, Uint16& green, Uint16& blue ) const
-{
-  int return_value = 
-    SDL_GetWindowGammaRamp( const_cast<SDL_Window*>( d_window ),
-			    &red,
-			    &green,
-			    &blue );
-
-  TEST_FOR_EXCEPTION( return_value != 0,
-		      ExceptionType,
-		      "Error: The gamma ramp could not be retrieved! "
-		      "SDL_Error: " << SDL_GetError() );
-}
-
-// Set the gamma ramp for the display that owns the window
-void Window::setGammaRamp( const Uint16 red,
-			   const Uint16 green,
-			   const Uint16 blue )
-{
-  int return_value = SDL_SetWindowGammaRamp( d_window, &red, &green, &blue );
-
-  TEST_FOR_EXCEPTION( return_value != 0,
-		      ExceptionType,
-		      "Error: The gamma ramp could not be set! "
-		      "SDL_Error: " << SDL_GetError() );
 }
 
 // Get the window pixel format
