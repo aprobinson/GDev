@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE( getMaxTextureWidth )
 {
   GDev::SurfaceRenderer renderer( test_surface );
 
-  BOOST_CHECK_EQUAL( renderer.getMaxTextureWidth(), 800 );
+  BOOST_CHECK( renderer.getMaxTextureWidth() > 0 );
 }
 
 //---------------------------------------------------------------------------//
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( getMaxTextureHeight )
 {
   GDev::SurfaceRenderer renderer( test_surface );
 
-  BOOST_CHECK_EQUAL( renderer.getMaxTextureHeight(), 600 );
+  BOOST_CHECK( renderer.getMaxTextureHeight() > 0 );
 }
 
 //---------------------------------------------------------------------------//
@@ -251,6 +251,261 @@ BOOST_AUTO_TEST_CASE( get_setViewport )
   BOOST_CHECK_EQUAL( read_viewport.y, 0 );
   BOOST_CHECK_EQUAL( read_viewport.w, 800 );
   BOOST_CHECK_EQUAL( read_viewport.h, 600 );
+
+  SDL_Rect viewport = {200,150,400,300};
+
+  BOOST_CHECK_NO_THROW( renderer.setViewport( viewport ) );
+  renderer.getViewport( read_viewport );
+
+  BOOST_CHECK_EQUAL( read_viewport.x, 200 );
+  BOOST_CHECK_EQUAL( read_viewport.y, 150 );
+  BOOST_CHECK_EQUAL( read_viewport.w, 400 );
+  BOOST_CHECK_EQUAL( read_viewport.h, 300 );
+}
+
+//---------------------------------------------------------------------------//
+// Check that the viewport can be reset
+BOOST_AUTO_TEST_CASE( resetViewport )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+
+  SDL_Rect initial_viewport, read_viewport;
+
+  renderer.getViewport( initial_viewport );
+
+  SDL_Rect viewport = {200,150,400,300};
+
+  BOOST_CHECK_NO_THROW( renderer.setViewport( viewport ) );
+  renderer.getViewport( read_viewport );
+
+  BOOST_CHECK( initial_viewport.x != read_viewport.x );
+  BOOST_CHECK( initial_viewport.y != read_viewport.y );
+  BOOST_CHECK( initial_viewport.w != read_viewport.w );
+  BOOST_CHECK( initial_viewport.h != read_viewport.h );
+
+  BOOST_CHECK_NO_THROW( renderer.resetViewport() );
+  renderer.getViewport( read_viewport );
+
+  BOOST_CHECK_EQUAL( initial_viewport.x, read_viewport.x );
+  BOOST_CHECK_EQUAL( initial_viewport.y, read_viewport.y );
+  BOOST_CHECK_EQUAL( initial_viewport.w, read_viewport.w );
+  BOOST_CHECK_EQUAL( initial_viewport.h, read_viewport.h );
+}
+
+//---------------------------------------------------------------------------//
+// Check that the raw renderer pointer can be returned
+BOOST_AUTO_TEST_CASE( getRawRendererPtr )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+
+  BOOST_CHECK( renderer.getRawRendererPtr() != NULL );
+
+  const GDev::SurfaceRenderer const_renderer( test_surface );
+
+  BOOST_CHECK( const_renderer.getRawRendererPtr() != NULL );
+}
+
+//---------------------------------------------------------------------------//
+// Check that the current rendering target is the default target
+BOOST_AUTO_TEST_CASE( isCurrentTargetDefault )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+
+  BOOST_CHECK( renderer.isCurrentTargetDefault() );
+}
+
+//---------------------------------------------------------------------------//
+// Check that non-default targets are supported
+BOOST_AUTO_TEST_CASE( isNonDefaultTargetSupported )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+  
+  BOOST_CHECK( renderer.isNonDefaultTargetSupported() );
+}
+
+//---------------------------------------------------------------------------//
+// Check that the current target can be set to the default target
+BOOST_AUTO_TEST_CASE( setCurrentTargetDefault )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+
+  BOOST_CHECK_NO_THROW( renderer.setCurrentTargetDefault() );
+  BOOST_CHECK( renderer.isCurrentTargetDefault() );
+}
+
+//---------------------------------------------------------------------------//
+// Check that the current target can be cleared
+BOOST_AUTO_TEST_CASE( clearCurrentTarget )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+
+  SDL_Color red = {0xFF,0,0,0xFF};
+
+  renderer.setDrawColor( red );
+
+  BOOST_CHECK_NO_THROW( renderer.clear() );
+
+  renderer.present();
+
+  test_surface->exportToBMP( "test_cleared_surface.bmp" );
+}
+
+//---------------------------------------------------------------------------//
+// Check that a line can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawLine )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+  
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+
+  SDL_Color red = {0xFF,0,0,0xFF};
+
+  renderer.setDrawColor( red );
+
+  BOOST_CHECK_NO_THROW( renderer.drawLine( 0, 
+					   test_surface->getHeight()/2,
+					   test_surface->getWidth(),
+					   test_surface->getHeight()/2 ) );
+
+  renderer.present();
+
+  test_surface->exportToBMP( "test_line_surface.bmp" );
+}
+
+//---------------------------------------------------------------------------//
+// Check that lines can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawLines )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+
+  std::vector<SDL_Point> points( 4 );
+  points[0].x = 0;
+  points[0].y = test_surface->getHeight()/2;
+  
+  points[1].x = test_surface->getWidth();
+  points[1].y = test_surface->getHeight()/2;
+
+  points[2].x = test_surface->getWidth()/2;
+  points[2].y = test_surface->getHeight();
+
+  points[3] = points[0];
+
+  SDL_Color green = {0,0xFF,0,0xFF};
+
+  renderer.setDrawColor( green );
+
+  BOOST_CHECK_NO_THROW( renderer.drawLines( points ) );
+
+  renderer.present();
+
+  test_surface->exportToBMP( "test_lines_surface.bmp" );
+}
+
+//---------------------------------------------------------------------------//
+// Check that rectangles can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawRectangle )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+
+  SDL_Rect rect = {0,0,test_surface->getWidth()/2,test_surface->getHeight()/2};
+
+  SDL_Color blue = {0,0,0xFF,0xFF};
+
+  renderer.setDrawColor( blue );
+
+  BOOST_CHECK_NO_THROW( renderer.drawRectangle( rect, false ) );
+
+
+  rect = {test_surface->getWidth()/2,
+	  test_surface->getHeight()/2,
+	  test_surface->getWidth()/2,
+	  test_surface->getHeight()/2};
+  
+  SDL_Color green = {0,0xFF,0,0xFF};
+
+  renderer.setDrawColor( green );
+
+  BOOST_CHECK_NO_THROW( renderer.drawRectangle( rect, true ) );
+
+  renderer.present();
+
+  test_surface->exportToBMP( "test_rect_surface.bmp" );
+}
+
+//---------------------------------------------------------------------------//
+// Check that rectangles can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawRectangles )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+  
+  std::vector<SDL_Rect> rects( 3 );
+  rects[0].x = 0;
+  rects[0].y = 0;
+  rects[0].w = test_surface->getWidth()/3;
+  rects[0].h = test_surface->getHeight()/2;
+
+  rects[1].x = 2*test_surface->getWidth()/3;
+  rects[1].y = 0;
+  rects[1].w = test_surface->getWidth()/3;
+  rects[1].h = test_surface->getHeight()/2;
+
+  rects[2].x = test_surface->getWidth()/3;
+  rects[2].y = test_surface->getHeight()/2;
+  rects[2].w = test_surface->getWidth()/3;
+  rects[2].h = test_surface->getHeight()/2;
+
+  SDL_Color red = {0xFF,0,0,0xFF};
+
+  renderer.setDrawColor( red );
+
+  BOOST_CHECK_NO_THROW( renderer.drawRectangles( rects, true ) );
+
+  rects[0].x = test_surface->getWidth()/3;
+  rects[0].y = 0;
+  rects[0].w = test_surface->getWidth()/3;
+  rects[0].h = test_surface->getHeight()/2;
+
+  rects[1].x = 0;
+  rects[1].y = test_surface->getHeight()/2;
+  rects[1].w = test_surface->getWidth()/3;
+  rects[1].h = test_surface->getHeight()/2;
+
+  rects[2].x = 2*test_surface->getWidth()/3;
+  rects[2].y = test_surface->getHeight()/2;
+  rects[2].w = test_surface->getWidth()/3;
+  rects[2].h = test_surface->getHeight()/2;
+  
+  SDL_Color blue = {0,0,0xFF,0xFF};
+
+  renderer.setDrawColor( blue );
+
+  BOOST_CHECK_NO_THROW( renderer.drawRectangles( rects, false ) );
+
+  renderer.present();
+
+  test_surface->exportToBMP( "test_rects_surface.bmp" );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -58,10 +58,10 @@ public:
   virtual ~Texture();
 
   //! Get the width of the texture
-  unsigned getWidth() const;
+  int getWidth() const;
 
   //! Get the height of the texture
-  unsigned getHeight() const;
+  int getHeight() const;
 
   //! Get the alpha modulation
   Uint8 getAlphaMod() const;
@@ -94,22 +94,22 @@ public:
   SDL_Texture* getRawTexturePtr();
 
   //! Render the texture
-  void render();
+  void render() const;
 
   //! Render the whole texture clip at the desired point
-  void render( const int x_position, 
-	       const int y_position, 
-	       const SDL_Rect* texture_clip,
+  void render( const int target_x_position, 
+	       const int target_y_position, 
+	       const SDL_Rect* texture_clip = NULL,
 	       const double rotation_angle = 0.0,
 	       const SDL_Point* rotation_center = NULL,
-	       const SDL_RendererFlip flip = SDL_FLIP_NONE );
+	       const SDL_RendererFlip flip = SDL_FLIP_NONE ) const;
 
   //! Render the texture
-  void render( const SDL_Rect* texture_rect = NULL,
-	       const SDL_Rect* target_rect = NULL,
+  void render( const SDL_Rect* target_clip,
+	       const SDL_Rect* texture_clip = NULL,
 	       const double rotation_angle = 0.0,
 	       const SDL_Point* rotation_center = NULL,
-	       const SDL_RendererFlip flip = SDL_FLIP_NONE );
+	       const SDL_RendererFlip flip = SDL_FLIP_NONE ) const;
 
 protected:
 

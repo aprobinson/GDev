@@ -8,6 +8,7 @@
 
 // Std Lib Includes
 #include <algorithm>
+#include <limits>
 
 // GDev Includes
 #include "Renderer.hpp"
@@ -94,13 +95,13 @@ bool Renderer::isValidTextureFormat( const Uint32 format ) const
 }
 
 // Get the max texture width
-unsigned Renderer::getMaxTextureWidth() const
+int Renderer::getMaxTextureWidth() const
 {
   return d_max_texture_width;
 }
 
 // Get the max texture height
-unsigned Renderer::getMaxTextureHeight() const
+int Renderer::getMaxTextureHeight() const
 {
   return d_max_texture_height;
 }
@@ -308,7 +309,9 @@ void Renderer::setCurrentTargetDefault()
 }
 
 // Clear the current rendering target with the drawing color
-void Renderer::clearCurrentTarget()
+/*! \details This will ignore the viewport and clear the entire target.
+ */
+void Renderer::clear()
 {
   int return_value = SDL_RenderClear( d_renderer );
 
@@ -426,6 +429,17 @@ void Renderer::drawRectangles( const std::vector<SDL_Rect>& rectangles,
 		      "target! SDL_Error: " << SDL_GetError() );
 }
 
+// Present the drawing
+/*! \details All drawing functions operate on a backbuffer. Once the drawing
+ * for a particular frame is complete, the result (backbuffer) needs to 
+ * presented to the target. The backbuffer CAN be deleted after a call to
+ * present. Calling the clear function will reinitialize the backbuffer
+ */
+void Renderer::present()
+{
+  SDL_RenderPresent( d_renderer );
+}
+
 // Free the renderer
 void Renderer::free()
 {
@@ -447,8 +461,15 @@ void Renderer::loadRendererInfo()
 		      "SDL_Error: " << SDL_GetError() );
 
   d_name = info.name;
+  
   d_max_texture_width = info.max_texture_width;
+  if( d_max_texture_width == 0 )
+    d_max_texture_width = std::numeric_limits<int>::max();
+  
   d_max_texture_height = info.max_texture_height;
+  if( d_max_texture_height == 0 )
+    d_max_texture_height = std::numeric_limits<int>::max();
+  
   d_supported_flags = info.flags;
   
   d_supported_texture_formats.resize( info.num_texture_formats );

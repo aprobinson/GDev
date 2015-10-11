@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE( getTics,
 
   Uint32 time_2 = GDev::GlobalSDLSession::getTics();
   
-  BOOST_CHECK_EQUAL( time_2, time_1+1 );
+  BOOST_CHECK( time_2 > time_1 );
 }
 
 //---------------------------------------------------------------------------//
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE( getTime,
 
   double time_2 = GDev::GlobalSDLSession::getTime();
 
-  BOOST_CHECK_CLOSE( time_2, time_1+0.01, 1e-9 );
+  BOOST_CHECK( time_2 > time_1 );
 }
 
 //---------------------------------------------------------------------------//
