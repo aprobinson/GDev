@@ -17,7 +17,7 @@ namespace GDev{
 /*! \details The size of the texture will be the size of the rendering
  * target.
  */ 
-TargetTexture::TargetTexture( const std::shared_ptr<WindowRenderer>& renderer,
+TargetTexture::TargetTexture( const std::shared_ptr<Renderer>& renderer,
 			      const Uint32 format )
   : Texture( renderer, 
 	     SDL_TEXTUREACCESS_TARGET, 
@@ -31,7 +31,7 @@ TargetTexture::TargetTexture( const std::shared_ptr<WindowRenderer>& renderer,
 }
 
 // Blank constructor
-TargetTexture::TargetTexture( const std::shared_ptr<WindowRenderer>& renderer,
+TargetTexture::TargetTexture( const std::shared_ptr<Renderer>& renderer,
 			      const int width,
 			      const int height,
 			      const Uint32 format )

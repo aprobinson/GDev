@@ -18,6 +18,18 @@ INCLUDE(Macros)
 # Enforce an out-of-source build
 ENFORCE_OUT_OF_SOURCE_BUILD()
 
+# Load the patch files
+FIND_FILE(SDL_RENDER_SW_C_PATCH
+  NAMES "SDL_render_sw.c.patch"
+  PATHS ${CMAKE_SOURCE_DIR}/patches/
+  CACHE STRING "The SDL software renderer patch file" FORCE)
+
+# Find the patch exec
+FIND_PROGRAM(PATCH_EXEC NAMES patch)
+IF(${PATCH_EXEC} MATCHES NOTFOUND)
+  MESSAGE(FATAL_ERROR "The patch program could not be found!")
+ENDIF()
+
 # Enable the make test target
 ENABLE_TESTING()
 
@@ -39,6 +51,40 @@ IF(SDL_PREFIX)
     MESSAGE(FATAL_ERROR "The SDL2 library could not be found!")
   ENDIF()
 
+  IF((NOT DEFINED SDL_SW_RENDERER_PATCHED) OR (NOT ${SDL_SW_RENDERER_PATCHED}))
+    FIND_FILE(SDL_RENDER_SW_C
+      NAMES "SDL_render_sw.c"
+      PATHS ${SDL_PREFIX}/src/src/render/software ${SDL_PREFIX}/SDL2-2.0.3/src/render/software)
+    IF(SDL_RENDER_SW_C MATCHES NOTFOUND)
+      MESSAGE(FATAL_ERROR "The SDL_render_sw.c file could not be found!")
+    ENDIF()
+
+    IF(NOT DEFINED SDL_RENDER_SW_C_PATCH)
+      MESSAGE(FATAL_ERROR "The SDL_render_sw.c patch file needs to be defined!")
+    ENDIF()
+
+    IF(NOT DEFINED PATCH_EXEC)
+      MESSAGE(FATAL_ERROR "The patch executable needs to be defined!")
+    ENDIF()
+    
+    EXECUTE_PROCESS(COMMAND ${PATCH_EXEC} -s -N -r ${CMAKE_BINARY_DIR}/SDL_render_sw.c.rej ${SDL_RENDER_SW_C} ${SDL_RENDER_SW_C_PATCH}
+      OUTPUT_VARIABLE SDL_RENDER_SW_C_PATCH_OUTPUT
+      ERROR_VARIABLE SDL_RENDER_SW_C_PATCH_ERROR
+      RESULT_VARIABLE SDL_RENDER_SW_C_PATCH_RESULT)
+    
+    IF(${SDL_RENDER_SW_C_PATCH_OUTPUT} MATCHES "FAILED")
+      MESSAGE(FATAL_ERROR "The SDL_render_sw.c file could not be patched: ${SDL_RENDER_SW_C_PATCH_OUTPUT}")
+    ELSEIF(${SDL_RENDER_SW_C_PATCH_OUTPUT} MATCHES "refusing")
+      MESSAGE(FATAL_ERROR "The SDL_render_sw.c file could not be patched: ${SDL_RENDER_SW_C_PATCH_OUTPUT}")
+    ELSEIF(SDL_RENDER_SW_C_PATCH_RESULT EQUAL "0")
+      MESSAGE(FATAL_ERROR "SDL_render_sw.c was successfully patched for the first time. SDL needs to be rebuilt before proceeding.")
+    ELSE()
+      SET(SDL_SW_RENDERER_PATCHED "ON"
+	CACHE BOOL "Flag that indicates if the patch was successful." FORCE)
+      MESSAGE("-- SDL_render_sw.c has been patched!")
+    ENDIF()
+  ENDIF()
+  
   # Echo the SDL details if a verbose configure was requested
   IF(CMAKE_VERBOSE_CONFIGURE)
     MESSAGE("Found SDL! Here are the details: ")
