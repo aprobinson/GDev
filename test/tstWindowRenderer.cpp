@@ -345,10 +345,168 @@ BOOST_AUTO_TEST_CASE( clearCurrentTarget )
 
   //test_window->updateWindowSurface();
 
-  SDL_Delay(2000);
+  SDL_Delay(500);
 
   //test_window->getSurface().exportToBMP( "test_cleared_window_surface.bmp" );
 }
+
+//---------------------------------------------------------------------------//
+// Check that a line can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawLine )
+{
+  GDev::WindowRenderer renderer( test_window );
+  
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+
+  SDL_Color red = {0xFF,0,0,0xFF};
+
+  renderer.setDrawColor( red );
+
+  BOOST_CHECK_NO_THROW( renderer.drawLine( 0, 
+					   test_window->getHeight()/2,
+					   test_window->getWidth(),
+					   test_window->getHeight()/2 ) );
+
+  renderer.present();
+
+  SDL_Delay(500);
+}
+
+//---------------------------------------------------------------------------//
+// Check that lines can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawLines )
+{
+  GDev::WindowRenderer renderer( test_window );
+
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+
+  std::vector<SDL_Point> points( 4 );
+  points[0].x = 0;
+  points[0].y = test_window->getHeight()/2;
+  
+  points[1].x = test_window->getWidth();
+  points[1].y = test_window->getHeight()/2;
+
+  points[2].x = test_window->getWidth()/2;
+  points[2].y = test_window->getHeight();
+
+  points[3] = points[0];
+
+  SDL_Color green = {0,0xFF,0,0xFF};
+
+  renderer.setDrawColor( green );
+
+  BOOST_CHECK_NO_THROW( renderer.drawLines( points ) );
+
+  renderer.present();
+
+  SDL_Delay(500);
+}
+
+//---------------------------------------------------------------------------//
+// Check that rectangles can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawRectangle )
+{
+  GDev::WindowRenderer renderer( test_window );
+
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+
+  SDL_Rect rect = {0,0,test_window->getWidth()/2,test_window->getHeight()/2};
+
+  SDL_Color blue = {0,0,0xFF,0xFF};
+
+  renderer.setDrawColor( blue );
+
+  BOOST_CHECK_NO_THROW( renderer.drawRectangle( rect, false ) );
+
+
+  rect = {test_window->getWidth()/2,
+	  test_window->getHeight()/2,
+	  test_window->getWidth()/2,
+	  test_window->getHeight()/2};
+  
+  SDL_Color green = {0,0xFF,0,0xFF};
+
+  renderer.setDrawColor( green );
+
+  BOOST_CHECK_NO_THROW( renderer.drawRectangle( rect, true ) );
+
+  renderer.present();
+  SDL_Delay(500);
+}
+
+//---------------------------------------------------------------------------//
+// Check that rectangles can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawRectangles )
+{
+  GDev::WindowRenderer renderer( test_window );
+
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+  
+  std::vector<SDL_Rect> rects( 3 );
+  rects[0].x = 0;
+  rects[0].y = 0;
+  rects[0].w = test_window->getWidth()/3;
+  rects[0].h = test_window->getHeight()/2;
+
+  rects[1].x = 2*test_window->getWidth()/3;
+  rects[1].y = 0;
+  rects[1].w = test_window->getWidth()/3;
+  rects[1].h = test_window->getHeight()/2;
+
+  rects[2].x = test_window->getWidth()/3;
+  rects[2].y = test_window->getHeight()/2;
+  rects[2].w = test_window->getWidth()/3;
+  rects[2].h = test_window->getHeight()/2;
+
+  SDL_Color red = {0xFF,0,0,0xFF};
+
+  renderer.setDrawColor( red );
+
+  BOOST_CHECK_NO_THROW( renderer.drawRectangles( rects, true ) );
+
+  rects[0].x = test_window->getWidth()/3;
+  rects[0].y = 0;
+  rects[0].w = test_window->getWidth()/3;
+  rects[0].h = test_window->getHeight()/2;
+
+  rects[1].x = 0;
+  rects[1].y = test_window->getHeight()/2;
+  rects[1].w = test_window->getWidth()/3;
+  rects[1].h = test_window->getHeight()/2;
+
+  rects[2].x = 2*test_window->getWidth()/3;
+  rects[2].y = test_window->getHeight()/2;
+  rects[2].w = test_window->getWidth()/3;
+  rects[2].h = test_window->getHeight()/2;
+  
+  SDL_Color blue = {0,0,0xFF,0xFF};
+
+  renderer.setDrawColor( blue );
+
+  BOOST_CHECK_NO_THROW( renderer.drawRectangles( rects, false ) );
+
+  renderer.present();
+  SDL_Delay(500);
+}
+
+
 
 //---------------------------------------------------------------------------//
 // end tstWindowRenderer.cpp
