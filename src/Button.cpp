@@ -34,6 +34,9 @@ void Button::handleAction( const SDL_Event& action )
         case SDL_MOUSEBUTTONUP:
 	  this->handleButtonRelease();
 	  break;
+        default:
+	  this->handleDefault();
+	  break;
       }
     }    
     else
