@@ -9,6 +9,8 @@
 // GDev Includes
 #include "Button.hpp"
 
+namespace GDev{
+
 // Handle the action
 void Button::handleAction( const SDL_Event& action )
 {
@@ -38,6 +40,8 @@ void Button::handleAction( const SDL_Event& action )
       this->handleDefault();
   }
 }
+
+} // end GDev namespace
 
 //---------------------------------------------------------------------------//
 // end Button.cpp

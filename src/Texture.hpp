@@ -27,6 +27,7 @@
 // GDev Includes
 #include "Renderer.hpp"
 #include "RenderableObject.hpp"
+#include "Shape.hpp"
 
 namespace GDev{
 
@@ -119,6 +120,13 @@ protected:
 	   const Uint32 format,
 	   const unsigned width,
 	   const unsigned height );
+
+  //! Shape constructor
+  Texture( const std::shared_ptr<Renderer>& renderer,
+	   const Shape& area,
+	   const SDL_Color& inside_color,
+	   const SDL_Color& edge_color,
+	   const SDL_Color& outside_color );
 
   //! Surface constructor
   Texture( const std::shared_ptr<Renderer>& renderer,

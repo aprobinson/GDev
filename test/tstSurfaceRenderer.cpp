@@ -19,6 +19,8 @@
 // GDev Includes
 #include "SurfaceRenderer.hpp"
 #include "GlobalSDLSession.hpp"
+#include "Rectangle.hpp"
+#include "Ellipse.hpp"
 
 //---------------------------------------------------------------------------//
 // Testing Structs
@@ -530,6 +532,145 @@ BOOST_AUTO_TEST_CASE( drawRectangles )
   renderer.present();
 
   test_surface->exportToBMP( "test_rects_surface.bmp" );
+}
+
+//---------------------------------------------------------------------------//
+// Check that shapes can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawShape )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+
+  std::shared_ptr<GDev::Shape> shape( new GDev::Rectangle(
+					       0, 
+					       0,
+					       test_surface->getWidth()/2,
+					       test_surface->getHeight()/2,
+					       2 ) );
+
+  SDL_Color blue = {0,0,0xFF,0xFF};
+
+  renderer.setDrawColor( blue );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShape( *shape, false ) );
+
+
+  shape.reset( new GDev::Rectangle( test_surface->getWidth()/2,
+				    test_surface->getHeight()/2,
+				    test_surface->getWidth()/2,
+				    test_surface->getHeight()/2,
+				    2 ) );
+  
+  SDL_Color green = {0,0xFF,0,0xFF};
+
+  renderer.setDrawColor( green );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShape( *shape, true ) );
+
+  shape.reset( new GDev::Ellipse( 3*test_surface->getWidth()/4,
+				  test_surface->getHeight()/4,
+				  test_surface->getWidth()/4,
+				  test_surface->getHeight()/4,
+				  2 ) );
+
+  SDL_Color mixed = {0xFF,0xFF,0,0xFF};
+  
+  renderer.setDrawColor( mixed );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShape( *shape, false ) );
+
+  shape.reset( new GDev::Ellipse( test_surface->getWidth()/4,
+				  3*test_surface->getHeight()/4,
+				  test_surface->getWidth()/4,
+				  test_surface->getHeight()/4,
+				  2 ) );
+
+  mixed = {0,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( mixed );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShape( *shape, true ) );
+
+  renderer.present();
+
+  test_surface->exportToBMP( "test_shape_surface.bmp" );
+}
+
+//---------------------------------------------------------------------------//
+// Check that shapes can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawShapes )
+{
+  GDev::SurfaceRenderer renderer( test_surface );
+
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+
+  std::vector<std::shared_ptr<const GDev::Shape> > shapes( 4 );
+  shapes[0].reset( new GDev::Rectangle( 0, 
+					0,
+					test_surface->getWidth()/2,
+					test_surface->getHeight()/2,
+					1 ) );
+  shapes[1].reset( new GDev::Rectangle( test_surface->getWidth()/2,
+				       test_surface->getHeight()/2,
+				       test_surface->getWidth()/2,
+				       test_surface->getHeight()/2,
+				       2 ) );
+  shapes[2].reset( new GDev::Ellipse( 3*test_surface->getWidth()/4,
+				      test_surface->getHeight()/4,
+				      test_surface->getWidth()/4,
+				      test_surface->getHeight()/4,
+				      4 ) );
+  shapes[3].reset( new GDev::Ellipse( test_surface->getWidth()/4,
+				      3*test_surface->getHeight()/4,
+				      test_surface->getWidth()/4,
+				      test_surface->getHeight()/4,
+				      10 ) );
+
+  SDL_Color mixed = {0xFF,0,0xFF,0xFF};
+
+  renderer.setDrawColor( mixed );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShapes( shapes, false ) );
+
+  shapes[0].reset( new GDev::Rectangle( test_surface->getWidth()/8,
+					test_surface->getHeight()/8,
+					test_surface->getWidth()/8,
+					test_surface->getHeight()/8,
+					2 ) );
+  shapes[1].reset( new GDev::Rectangle( 7*test_surface->getWidth()/8,
+					test_surface->getHeight()/8,
+					test_surface->getWidth()/8,
+					test_surface->getHeight()/8,
+					2 ) );
+  shapes[2].reset( new GDev::Ellipse( test_surface->getWidth()/2,
+				      test_surface->getHeight()/2,
+				      test_surface->getWidth()/16,
+				      test_surface->getWidth()/16,
+				      2 ) );
+  shapes[3].reset( new GDev::Ellipse( test_surface->getWidth()/2,
+				      7*test_surface->getHeight()/8,
+				      test_surface->getWidth()/2,
+				      test_surface->getHeight()/16,
+				      3 ) );
+
+  mixed = {0x0F,0xFF,0x0F,0xFF};
+
+  renderer.setDrawColor( mixed );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShapes( shapes, false ) );
+
+  renderer.present();
+
+  test_surface->exportToBMP( "test_shapes_surface.bmp" );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

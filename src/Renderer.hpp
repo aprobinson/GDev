@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <memory>
 
 // SDL Includes
 #include <SDL2/SDL.h>
@@ -20,6 +21,7 @@
 // GDev Includes
 #include "Surface.hpp"
 #include "Window.hpp"
+#include "Shape.hpp"
 
 namespace GDev{
 
@@ -160,6 +162,13 @@ public:
   void drawRectangles( const std::vector<SDL_Rect>& rectangles,
 		       const bool fill );
 
+  //! Draw an arbitrary shape on the current rendering target
+  void drawShape( const Shape& shape, const bool fill );
+
+  //! Draw arbitrary shapes on the current rendering target
+  void drawShapes( const std::vector<std::shared_ptr<const Shape> >& shapes,
+		   const bool fill );
+
   //! Present the drawing
   void present();
 
@@ -175,13 +184,20 @@ protected:
 
 private:
 
-  //! Free the renderer
+  // Dummy deleter
+  struct DummyDeleter
+  {
+    void operator()(Renderer* ptr) const
+    { /* ... */ }
+  };
+
+  // Free the renderer
   void free();
 
-  //! Load the renderer info
+  // Load the renderer info
   void loadRendererInfo();
 
-  //! Do not allow default construction
+  // Do not allow default construction
   Renderer();
 
   // The SDL renderer

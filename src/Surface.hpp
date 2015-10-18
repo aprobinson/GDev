@@ -22,6 +22,7 @@
 
 // GDev Includes
 #include "Font.hpp"
+#include "Shape.hpp"
 
 namespace GDev{
 
@@ -51,6 +52,12 @@ public:
 
   //! Blank constructor
   Surface( const int width, const int height, const Uint32 pixel_format );
+
+  //! Shape constructor
+  Surface( const Shape& area,
+	   const SDL_Color& inside_color,
+	   const SDL_Color& edge_color,
+	   const SDL_Color& outside_color );
 
   //! Image constructor
   Surface( const std::string& image_name );
@@ -164,6 +171,11 @@ public:
   void exportToBMP( const std::string bmp_file_name ) const;
 
 private:
+
+  // Initialize an RGB surface
+  void initializeRGBSurface( const int width,
+			     const int height,
+			     const Uint32 pixel_format );
 
   // Free the surface
   void free();

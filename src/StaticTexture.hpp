@@ -20,6 +20,13 @@ class StaticTexture : public Texture
   
 public:
 
+  //! Shape constructor
+  StaticTexture( const std::shared_ptr<Renderer>& renderer,
+		 const Shape& area,
+		 const SDL_Color& inside_color,
+		 const SDL_Color& edge_color,
+		 const SDL_Color& outside_color );
+
   //! Surface constructor
   StaticTexture( const std::shared_ptr<Renderer>& renderer,
 		 const Surface& surface );

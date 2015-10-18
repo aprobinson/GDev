@@ -6,8 +6,8 @@
 //!
 //---------------------------------------------------------------------------//
 
-#ifndef BUTTON_HPP
-#define BUTTON_HPP
+#ifndef GDEV_BUTTON_HPP
+#define GDEV_BUTTON_HPP
 
 // SDL Include
 #include <SDL2/SDL.h>
@@ -15,6 +15,8 @@
 // GDev Includes
 #include "ActionListener.hpp"
 #include "RenderableObject.hpp"
+
+namespace GDev{
 
 //! The button base class
 class Button : public ActionListener, public RenderableObject
@@ -50,6 +52,8 @@ protected:
   // Test if the mouse position is inside of the button
   virtual bool isMouseInButton() const = 0;
 };
+
+} // end GDev namespace
 
 #endif // end BUTTON_HPP
 

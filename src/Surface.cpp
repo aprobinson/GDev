@@ -27,36 +27,69 @@ Surface::Surface( const int width,
   testPrecondition( width > 0 );
   testPrecondition( height > 0 );
 
-  int bits_per_pixel;
-  Uint32 rmask, gmask, bmask, amask;
+  this->initializeRGBSurface( width, height, pixel_format );
+}
 
-  SDL_bool return_value = SDL_PixelFormatEnumToMasks( pixel_format,
-						      &bits_per_pixel,
-						      &rmask,
-						      &gmask,
-						      &bmask,
-						      &amask );
+// Shape constructor
+Surface::Surface( const Shape& area,
+		  const SDL_Color& inside_color,
+		  const SDL_Color& edge_color,
+		  const SDL_Color& outside_color )
+  : d_surface( NULL ),
+    d_owns_surface( true )
+{
+  // Make sure the dimensions are valid
+  testPrecondition( area.getBoundingBoxWidth() > 0 );
+  testPrecondition( area.getBoundingBoxHeight() > 0 );
 
-  TEST_FOR_EXCEPTION( return_value != SDL_TRUE,
-		      ExceptionType,
-		      "Error: The pixel format " << 
-		      SDL_GetPixelFormatName( pixel_format ) <<
-		      " could not be used to create a blank surface! "
-		      "SDL_Error: " << SDL_GetError() );
+  this->initializeRGBSurface( area.getBoundingBoxWidth(), 
+			      area.getBoundingBoxHeight(), 
+			      SDL_PIXELFORMAT_ARGB8888 );
 
-  d_surface = SDL_CreateRGBSurface( 0, 
-				    width,
-				    height,
-				    bits_per_pixel,
-				    rmask,
-				    gmask,
-				    bmask,
-				    amask );
+  // Create the pixel types
+  Uint32 in_pixel = SDL_MapRGBA( &this->getPixelFormat(),
+				 inside_color.r,
+				 inside_color.g,
+				 inside_color.b,
+				 inside_color.a );
 
-  TEST_FOR_EXCEPTION( d_surface == NULL,
-		      ExceptionType,
-		      "Error: The blank surface could not be created! "
-		      "SDL_Error: " << SDL_GetError() );
+  Uint32 edge_pixel = SDL_MapRGBA( &this->getPixelFormat(),
+				   edge_color.r,
+				   edge_color.g,
+				   edge_color.b,
+				   edge_color.a );
+
+  Uint32 out_pixel = SDL_MapRGBA( &this->getPixelFormat(),
+				  outside_color.r,
+				  outside_color.g,
+				  outside_color.b,
+				  outside_color.a );
+
+  try{
+    // Get the surface pixels
+    this->lock();
+    
+    Uint32* pixels = (Uint32*)this->getPixels();
+    
+    for( int i = 0; i < this->getNumberOfPixels(); ++i )
+    {
+      int row = i/this->getWidth();
+      int pixel_x_pos = i - row*this->getWidth() + 
+	area.getBoundingBoxXPosition();
+      int pixel_y_pos = row + area.getBoundingBoxYPosition();
+      
+      if( area.isPointOn( pixel_x_pos, pixel_y_pos ) )
+      	pixels[i] = edge_pixel;
+      else if( area.isPointIn( pixel_x_pos, pixel_y_pos ) )
+	pixels[i] = in_pixel;
+      else
+	pixels[i] = out_pixel;
+    }
+
+    this->unlock();
+  }
+  EXCEPTION_CATCH_RETHROW( ExceptionType, 
+			   "Error: Unable to create the shape surface!" );
 }
 
 // Image constructor
@@ -456,6 +489,47 @@ void Surface::exportToBMP( const std::string bmp_file_name ) const
   TEST_FOR_EXCEPTION( return_value != 0,
 		      ExceptionType,
 		      "Error: Unable to export the surface to a bitmap! "
+		      "SDL_Error: " << SDL_GetError() );
+}
+
+// Initialize an RGB surface
+void Surface::initializeRGBSurface( const int width,
+				    const int height,
+				    const Uint32 pixel_format )
+{
+  // Make sure the dimensions are valid
+  testPrecondition( width > 0 );
+  testPrecondition( height > 0 );
+
+  int bits_per_pixel;
+  Uint32 rmask, gmask, bmask, amask;
+
+  SDL_bool return_value = SDL_PixelFormatEnumToMasks( pixel_format,
+						      &bits_per_pixel,
+						      &rmask,
+						      &gmask,
+						      &bmask,
+						      &amask );
+
+  TEST_FOR_EXCEPTION( return_value != SDL_TRUE,
+		      ExceptionType,
+		      "Error: The pixel format " << 
+		      SDL_GetPixelFormatName( pixel_format ) <<
+		      " could not be used to create a blank surface! "
+		      "SDL_Error: " << SDL_GetError() );
+
+  d_surface = SDL_CreateRGBSurface( 0, 
+				    width,
+				    height,
+				    bits_per_pixel,
+				    rmask,
+				    gmask,
+				    bmask,
+				    amask );
+
+  TEST_FOR_EXCEPTION( d_surface == NULL,
+		      ExceptionType,
+		      "Error: The blank surface could not be created! "
 		      "SDL_Error: " << SDL_GetError() );
 }
 

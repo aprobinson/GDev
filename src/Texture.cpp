@@ -48,6 +48,44 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
   this->loadTextureFormat();
 }
 
+// Shape constructor
+  Texture::Texture( const std::shared_ptr<Renderer>& renderer,
+		    const Shape& area,
+		    const SDL_Color& inside_color,
+		    const SDL_Color& edge_color,
+		    const SDL_Color& outside_color )
+    : d_texture( NULL ),
+      d_width( area.getBoundingBoxWidth() ),
+      d_height( area.getBoundingBoxHeight() ),
+      d_format(),
+      d_renderer( renderer )
+{
+  // Make sure the renderer is valid
+  testPrecondition( renderer );
+  // Make sure the area is valid
+  testPrecondition( area.getBoundingBoxWidth() > 0 ); 
+  testPrecondition( area.getBoundingBoxHeight() > 0 ); 
+
+  // Create a shape surface
+  try{
+    Surface shape_surface( area, inside_color, edge_color, outside_color );
+    
+    d_texture = SDL_CreateTextureFromSurface(renderer->getRawRendererPtr(),
+					     shape_surface.getRawSurfacePtr());
+  }
+  EXCEPTION_CATCH_RETHROW( ExceptionType,
+			   "Error: The texture could not be created!" );
+
+  // Make sure the texture was created successfully
+  TEST_FOR_EXCEPTION( d_texture == NULL,
+		      ExceptionType,
+		      "Error: The texture could not be created! "
+		      "SDL_Error: " << SDL_GetError() );
+
+  // Get the texture format
+  this->loadTextureFormat();
+}
+
 // Surface constructor
 Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 		  const Surface& surface )

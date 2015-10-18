@@ -1,3 +1,11 @@
+ADD_EXECUTABLE(tstRectangle tstRectangle.cpp)
+TARGET_LINK_LIBRARIES(tstRectangle gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
+ADD_TEST(Rectangle_test tstRectangle)
+
+ADD_EXECUTABLE(tstEllipse tstEllipse.cpp)
+TARGET_LINK_LIBRARIES(tstEllipse gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
+ADD_TEST(Ellipse_test tstEllipse)
+
 ADD_EXECUTABLE(tstGlobalSDLSession tstGlobalSDLSession.cpp)
 TARGET_LINK_LIBRARIES(tstGlobalSDLSession gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
 ADD_TEST(GlobalSDLSession_test tstGlobalSDLSession)
@@ -29,4 +37,3 @@ ADD_TEST(StaticTexture_test tstStaticTexture ${CMAKE_CURRENT_SOURCE_DIR}/test_fi
 ADD_EXECUTABLE(tstTargetTexture tstTargetTexture.cpp)
 TARGET_LINK_LIBRARIES(tstTargetTexture gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
 ADD_TEST(TargetTexture_test tstTargetTexture)
-

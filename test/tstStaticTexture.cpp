@@ -21,6 +21,7 @@
 #include "SurfaceRenderer.hpp"
 #include "WindowRenderer.hpp"
 #include "GlobalSDLSession.hpp"
+#include "Ellipse.hpp"
 
 //---------------------------------------------------------------------------//
 // Testing Variables
@@ -93,6 +94,42 @@ BOOST_GLOBAL_FIXTURE( GlobalInitFixture );
 
 //---------------------------------------------------------------------------//
 // Tests.
+//---------------------------------------------------------------------------//
+// Check that the static texture can be constructed
+BOOST_AUTO_TEST_CASE( constructor_shape_surfrend )
+{
+  GDev::Ellipse ellipse( 100, 50, 100, 50, 2 );
+
+  SDL_Color inside_color = {0,0xFF,0xFF};
+  SDL_Color edge_color = {0,0,0};
+  SDL_Color outside_color = {0xFF,0,0xFF};
+
+  BOOST_CHECK_NO_THROW( GDev::StaticTexture dummy_texture( 
+							 test_surface_renderer,
+							 ellipse,
+							 inside_color,
+							 edge_color,
+							 outside_color ) );
+}
+
+//---------------------------------------------------------------------------//
+// Check that the static texture can be constructed
+BOOST_AUTO_TEST_CASE( constructor_shape_windrend )
+{
+  GDev::Ellipse ellipse( 100, 50, 100, 50, 2 );
+
+  SDL_Color inside_color = {0,0xFF,0xFF};
+  SDL_Color edge_color = {0,0,0};
+  SDL_Color outside_color = {0xFF,0,0xFF};
+
+  BOOST_CHECK_NO_THROW( GDev::StaticTexture dummy_texture( 
+							 test_window_renderer,
+							 ellipse,
+							 inside_color,
+							 edge_color,
+							 outside_color ) );
+}
+
 //---------------------------------------------------------------------------//
 // Check that the static texture can be constructed
 BOOST_AUTO_TEST_CASE( constructor_surface_surfrend )

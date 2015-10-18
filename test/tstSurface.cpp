@@ -17,6 +17,8 @@
 
 // GDev Includes
 #include "Surface.hpp"
+#include "Ellipse.hpp"
+#include "Rectangle.hpp"
 #include "GlobalSDLSession.hpp"
 
 //---------------------------------------------------------------------------//
@@ -71,6 +73,19 @@ BOOST_FIXTURE_TEST_SUITE( Surface, CommandLineArgsFixture )
 BOOST_AUTO_TEST_CASE( constructor_blank )
 {
   BOOST_CHECK_NO_THROW( GDev::Surface dummy_surface( 10, 20, SDL_PIXELFORMAT_ARGB8888 ) );
+}
+
+//---------------------------------------------------------------------------//
+// Check that the surface object can be constructed
+BOOST_AUTO_TEST_CASE( constructor_shape )
+{
+  GDev::Ellipse ellipse( 100, 50, 100, 50, 2 );
+
+  SDL_Color inside_color = {0,0xFF,0xFF};
+  SDL_Color edge_color = {0,0,0};
+  SDL_Color outside_color = {0xFF,0,0xFF};
+
+  BOOST_CHECK_NO_THROW( GDev::Surface dummy_surface( ellipse, inside_color, edge_color, outside_color ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -404,6 +419,28 @@ BOOST_AUTO_TEST_CASE( exportToBMP )
   BOOST_CHECK_NO_THROW( surface.exportToBMP( "test_image.bmp" ) );
 
   BOOST_CHECK_NO_THROW( GDev::Surface test_surface( "test_image.bmp" ) );
+
+  GDev::Ellipse ellipse( 100, 50, 100, 50, 2 );
+
+  SDL_Color inside_color = {0,0,0xFF};
+  SDL_Color edge_color = {0,0xFF,0};
+  SDL_Color outside_color = {0xFF,0,0};
+
+  GDev::Surface ellipse_surface( ellipse, 
+  				 inside_color, 
+  				 edge_color, 
+  				 outside_color );
+  
+  BOOST_CHECK_NO_THROW( ellipse_surface.exportToBMP( "test_ellipse.bmp" ) );
+  std::cout << "here" << std::endl;
+  GDev::Rectangle rectangle( 0, 0, 200, 100, 10 );
+
+  GDev::Surface rect_surface( rectangle, 
+			      inside_color,
+			      edge_color,
+			      outside_color );
+
+  BOOST_CHECK_NO_THROW( rect_surface.exportToBMP( "test_rectangle.bmp" ) );
 }
   
 BOOST_AUTO_TEST_SUITE_END()

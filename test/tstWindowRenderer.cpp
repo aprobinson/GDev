@@ -19,6 +19,8 @@
 // GDev Includes
 #include "WindowRenderer.hpp"
 #include "GlobalSDLSession.hpp"
+#include "Rectangle.hpp"
+#include "Ellipse.hpp"
 
 //---------------------------------------------------------------------------//
 // Testing Variables
@@ -506,7 +508,142 @@ BOOST_AUTO_TEST_CASE( drawRectangles )
   SDL_Delay(500);
 }
 
+//---------------------------------------------------------------------------//
+// Check that shapes can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawShape )
+{
+  GDev::WindowRenderer renderer( test_window );
+ 
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
 
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+
+  std::shared_ptr<GDev::Shape> shape( new GDev::Rectangle(
+					       0, 
+					       0,
+					       test_window->getWidth()/2,
+					       test_window->getHeight()/2,
+					       2 ) );
+
+  SDL_Color blue = {0,0,0xFF,0xFF};
+
+  renderer.setDrawColor( blue );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShape( *shape, false ) );
+
+
+  shape.reset( new GDev::Rectangle( test_window->getWidth()/2,
+				    test_window->getHeight()/2,
+				    test_window->getWidth()/2,
+				    test_window->getHeight()/2,
+				    2 ) );
+  
+  SDL_Color green = {0,0xFF,0,0xFF};
+
+  renderer.setDrawColor( green );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShape( *shape, true ) );
+
+  shape.reset( new GDev::Ellipse( 3*test_window->getWidth()/4,
+				  test_window->getHeight()/4,
+				  test_window->getWidth()/4,
+				  test_window->getHeight()/4,
+				  2 ) );
+
+  SDL_Color mixed = {0xFF,0xFF,0,0xFF};
+  
+  renderer.setDrawColor( mixed );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShape( *shape, false ) );
+
+  shape.reset( new GDev::Ellipse( test_window->getWidth()/4,
+				  3*test_window->getHeight()/4,
+				  test_window->getWidth()/4,
+				  test_window->getHeight()/4,
+				  2 ) );
+
+  mixed = {0,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( mixed );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShape( *shape, true ) );
+
+  renderer.present();
+  SDL_Delay(500);
+}
+
+//---------------------------------------------------------------------------//
+// Check that shapes can be drawn on the current target
+BOOST_AUTO_TEST_CASE( drawShapes )
+{
+  GDev::WindowRenderer renderer( test_window );
+ 
+  SDL_Color white = {0xFF,0xFF,0xFF,0xFF};
+
+  renderer.setDrawColor( white );
+
+  renderer.clear();
+
+  std::vector<std::shared_ptr<const GDev::Shape> > shapes( 4 );
+  shapes[0].reset( new GDev::Rectangle( 0, 
+					0,
+					test_window->getWidth()/2,
+					test_window->getHeight()/2,
+					1 ) );
+  shapes[1].reset( new GDev::Rectangle( test_window->getWidth()/2,
+				       test_window->getHeight()/2,
+				       test_window->getWidth()/2,
+				       test_window->getHeight()/2,
+				       2 ) );
+  shapes[2].reset( new GDev::Ellipse( 3*test_window->getWidth()/4,
+				      test_window->getHeight()/4,
+				      test_window->getWidth()/4,
+				      test_window->getHeight()/4,
+				      4 ) );
+  shapes[3].reset( new GDev::Ellipse( test_window->getWidth()/4,
+				      3*test_window->getHeight()/4,
+				      test_window->getWidth()/4,
+				      test_window->getHeight()/4,
+				      10 ) );
+
+  SDL_Color mixed = {0xFF,0,0xFF,0xFF};
+
+  renderer.setDrawColor( mixed );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShapes( shapes, false ) );
+
+  shapes[0].reset( new GDev::Rectangle( test_window->getWidth()/8,
+					test_window->getHeight()/8,
+					test_window->getWidth()/8,
+					test_window->getHeight()/8,
+					2 ) );
+  shapes[1].reset( new GDev::Rectangle( 7*test_window->getWidth()/8,
+					test_window->getHeight()/8,
+					test_window->getWidth()/8,
+					test_window->getHeight()/8,
+					2 ) );
+  shapes[2].reset( new GDev::Ellipse( test_window->getWidth()/2,
+				      test_window->getHeight()/2,
+				      test_window->getWidth()/16,
+				      test_window->getWidth()/16,
+				      2 ) );
+  shapes[3].reset( new GDev::Ellipse( test_window->getWidth()/2,
+				      7*test_window->getHeight()/8,
+				      test_window->getWidth()/2,
+				      test_window->getHeight()/16,
+				      3 ) );
+
+  mixed = {0x0F,0xFF,0x0F,0xFF};
+
+  renderer.setDrawColor( mixed );
+
+  BOOST_CHECK_NO_THROW( renderer.drawShapes( shapes, false ) );
+
+  renderer.present();
+  SDL_Delay(500);
+}
 
 //---------------------------------------------------------------------------//
 // end tstWindowRenderer.cpp

@@ -14,6 +14,8 @@
 #include "Renderer.hpp"
 #include "ExceptionTestMacros.hpp"
 #include "DBCMacros.hpp"
+#include "StaticTexture.hpp"
+#include "Surface.hpp"
 
 namespace GDev{
 
@@ -463,6 +465,71 @@ void Renderer::drawRectangles( const std::vector<SDL_Rect>& rectangles,
 		      ExceptionType,
 		      "Error: The rectangles could not be drawn on the "
 		      "target! SDL_Error: " << SDL_GetError() );
+}
+
+// Draw an arbitrary shape on the current rendering target
+/*! \details The implementation of this function has introduced a circular
+ * reference.
+ */
+void Renderer::drawShape( const Shape& shape, const bool fill )
+{
+  // Get the draw colors
+  SDL_Color edge_color;
+  this->getDrawColor( edge_color );
+
+  SDL_Color outside_color = {0xFF,0xFF,0xFF,0};
+
+  SDL_Color inside_color;
+
+  if( fill )
+    inside_color = edge_color;
+  else
+    inside_color = outside_color;
+  
+  // Create a static texture with the shape
+  StaticTexture texture( std::shared_ptr<Renderer>( this, DummyDeleter() ),
+			 shape, 
+			 inside_color, 
+			 edge_color, 
+			 outside_color );
+
+  // Render the shape
+  texture.render( shape.getBoundingBoxXPosition(),
+		  shape.getBoundingBoxYPosition() );
+}
+
+// Draw arbitrary shapes on the current rendering target
+/*! \details The implementation of this function has introduced a circular
+ * reference.
+ */
+void Renderer::drawShapes( 
+		      const std::vector<std::shared_ptr<const Shape> >& shapes,
+		      const bool fill )
+{
+  // Get the draw colors
+  SDL_Color edge_color;
+  this->getDrawColor( edge_color );
+
+  SDL_Color outside_color = {0xFF,0xFF,0xFF,0};
+
+  SDL_Color inside_color;
+  if( fill )
+    inside_color = edge_color;
+  else
+    inside_color = outside_color;
+
+  for( unsigned i = 0; i < shapes.size(); ++i )
+  {
+    StaticTexture texture( std::shared_ptr<Renderer>( this, DummyDeleter() ),
+    			   *shapes[i],
+    			   inside_color,
+    			   edge_color,
+    			   outside_color );
+    
+    // Render the shape
+    texture.render( shapes[i]->getBoundingBoxXPosition(),
+		    shapes[i]->getBoundingBoxYPosition() );
+  }
 }
 
 // Present the drawing
