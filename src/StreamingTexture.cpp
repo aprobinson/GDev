@@ -21,11 +21,35 @@ StreamingTexture::StreamingTexture( const std::shared_ptr<Renderer>& renderer,
 				    const int width,
 				    const int height,
 				    const Uint32 format )
-  : Texture( renderer, SDL_TEXTUREACCESS_STREAMING, format, width, height )
+  : Texture( renderer, SDL_TEXTUREACCESS_STREAMING, format, width, height ),
+    d_is_locked( false ),
+    d_pixels( NULL ),
+    d_pitch( 0 ),
+    d_num_locked_pixels( 0 )
 {
   // Make sure the renderer is valid
   testPrecondition( renderer );
 }
+
+// Surface constructor
+StreamingTexture::StreamingTexture( const std::shared_ptr<Renderer>& renderer,
+				    const Surface& surface )
+  : Texture( renderer, 
+	     SDL_TEXTUREACCESS_STREAMING, 
+	     SDL_PIXELFORMAT_ARGB8888,
+	     surface.getWidth(),
+	     surface.getHeight() ),
+    d_is_locked( false ),
+    d_pixels( NULL ),
+    d_pitch( 0 ),
+    d_num_locked_pixels( 0 )
+{
+  // Make sure the renderer is valid
+  testPrecondition( renderer );
+
+  // Copy the surface pixels
+  this->copy( surface );
+}	   
 
 // Get the access pattern
 SDL_TextureAccess StreamingTexture::getAccessPattern() const
@@ -43,9 +67,7 @@ bool StreamingTexture::isLocked()
 void StreamingTexture::copy( const Surface& surface )
 {
   // Make sure the surface is valid 
-  testPrecondition( surface.getWidth() == this->getWidth() );
-  testPrecondition( surface.getHeight() == this->getHeight() );
-  
+    
   if( surface.getPixelFormat().format == this->getFormat() )
     this->copy( surface.getPixels(), surface.getNumberOfPixels() );
   else
@@ -71,7 +93,9 @@ void StreamingTexture::copy( const void* pixels, const unsigned num_pixels )
     num_pixels_to_copy = d_num_locked_pixels;
 
   // Copy the pixels from the destination to the texture
-  memcpy( d_pixels, pixels, num_pixels_to_copy );
+  memcpy( d_pixels, 
+	  pixels, 
+	  num_pixels_to_copy*SDL_BYTESPERPIXEL(this->getFormat()) );
   
   this->unlock();
 }
@@ -94,6 +118,8 @@ void StreamingTexture::lock()
 		      ExceptionType,
 		      "Error: The streaming texture could not be locked! "
 		      "SDL_Error: " << SDL_GetError() );
+
+  d_is_locked = true;
 }
 
 // Unlock the texture
@@ -101,6 +127,8 @@ void StreamingTexture::unlock()
 {
   // Make sure the texture is locked
   testPrecondition( d_is_locked );
+
+  d_is_locked = false;
 
   SDL_UnlockTexture( this->getRawTexturePtr() );
 }

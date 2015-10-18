@@ -49,11 +49,11 @@ Texture::Texture( const std::shared_ptr<Renderer>& renderer,
 }
 
 // Shape constructor
-  Texture::Texture( const std::shared_ptr<Renderer>& renderer,
-		    const Shape& area,
-		    const SDL_Color& inside_color,
-		    const SDL_Color& edge_color,
-		    const SDL_Color& outside_color )
+Texture::Texture( const std::shared_ptr<Renderer>& renderer,
+		  const Shape& area,
+		  const SDL_Color& inside_color,
+		  const SDL_Color& edge_color,
+		  const SDL_Color& outside_color )
     : d_texture( NULL ),
       d_width( area.getBoundingBoxWidth() ),
       d_height( area.getBoundingBoxHeight() ),

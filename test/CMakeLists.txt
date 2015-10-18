@@ -37,3 +37,7 @@ ADD_TEST(StaticTexture_test tstStaticTexture ${CMAKE_CURRENT_SOURCE_DIR}/test_fi
 ADD_EXECUTABLE(tstTargetTexture tstTargetTexture.cpp)
 TARGET_LINK_LIBRARIES(tstTargetTexture gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
 ADD_TEST(TargetTexture_test tstTargetTexture)
+
+ADD_EXECUTABLE(tstStreamingTexture tstStreamingTexture.cpp)
+TARGET_LINK_LIBRARIES(tstStreamingTexture gdev ${Boost_TEST_EXEC_MONITOR_LIBRARY})
+ADD_TEST(StreamingTexture_test tstStreamingTexture ${CMAKE_CURRENT_SOURCE_DIR}/test_files/test_image.png ${CMAKE_CURRENT_SOURCE_DIR}/test_files/test_font.ttf)

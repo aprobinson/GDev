@@ -31,17 +31,6 @@ public:
   StreamingTexture( const std::shared_ptr<Renderer>& renderer,
 		    const Surface& surface );
 
-  //! Image constructor
-  StreamingTexture( const std::shared_ptr<Renderer>& renderer,
-		    const std::string& image_name );	   
-
-  //! Text constructor
-  StreamingTexture( const std::shared_ptr<Renderer>& renderer,
-		    const std::string& message,
-		    const Font& font,
-		    const SDL_Color& text_color,
-		    const SDL_Color* background_color );
-
   //! Destructor
   ~StreamingTexture()
   { /* ... */ }
