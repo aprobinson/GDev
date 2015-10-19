@@ -76,7 +76,7 @@ When you run `ls` from your working directory you should see the following: `GDe
 4. run `tar -xvf SDL2_image-2.0.0.tar.gz`
 5. run `ln -s SDL2_image-2.0.0 src`
 6. move to the build directory (e.g. software/sdl-image/build)
-7. run `sudo apt-get build-dep libSDL2-image`
+7. run `sudo apt-get build-dep libsdl2-image`
 8. run `../src/configure --prefix=../.`
 9. run `make -j n`
 10. run `make install`
